@@ -1,0 +1,31 @@
+﻿  search.cpp
+F:\临时存储\nothing\search.cpp(47,27): warning C4244: “参数”: 从“double”转换到“const int”，可能丢失数据
+    正在创建库 F:\临时存储\nothing\x64\Release\nothing.lib 和对象 F:\临时存储\nothing\x64\Release\nothing.exp
+  正在生成代码
+  1 of 186 functions ( 0.5%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  已完成代码的生成
+mysqlcppconn-static.lib(mysql_driver.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_driver.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_connection.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_connection.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_native_driver_wrapper.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_native_driver_wrapper.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_uri.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_uri.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_metadata.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_metadata.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_warning.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_warning.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_prepared_statement.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_prepared_statement.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_statement.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_statement.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_debug.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_debug.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_client_api.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_client_api.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_native_connection_wrapper.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_native_connection_wrapper.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_util.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_util.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_art_resultset.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_art_resultset.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_resultbind.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_resultbind.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_ps_resultset.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_ps_resultset.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_ps_resultset_metadata.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_ps_resultset_metadata.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_parameter_metadata.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_parameter_metadata.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_resultset.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_resultset.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_native_resultset_wrapper.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_native_resultset_wrapper.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_native_statement_wrapper.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_native_statement_wrapper.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_art_rset_metadata.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_art_rset_metadata.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+mysqlcppconn-static.lib(mysql_resultset_metadata.obj) : warning LNK4099: 未找到 PDB“”(使用“mysqlcppconn-static.lib(mysql_resultset_metadata.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+  nothing.vcxproj -> F:\临时存储\nothing\x64\Release\nothing.exe
