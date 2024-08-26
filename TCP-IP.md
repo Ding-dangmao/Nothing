@@ -1,79 +1,56 @@
-# 奇怪的想法
+# TCP-IP
 
-## 搜索
+此文件简单封装了TCP-IP相关的函数功能
 
-对于查询数据进行数据的字符拆分,通过拆分后的结果依次查询, 并对每个结果进行查询次数的权值叠加。然后展示,当然权值之间有差异。完整字符串权值为最高,其余依次递减。
+## 类结构
 
-模糊搜索的进阶版(复杂度堪忧啊!)
+**套接字句柄**
+
+基类SocketUtil存储最近一次使用的套接字句柄(包括Client,还有Server)。
+
+若是ServerSocketUtil则必存储`server_sock_`还有最近一次使用的`client_sock_`
+
+若是ClientSocketUtil则只存储`client_sock_`
+
+**地址值**
+
+基类SocketUtil存储最近一次使用的套接字句柄(包括Client,还有Server)。
+
+基类SocketUtil存储最近一次使用的套接字句柄(包括Client,还有Server)。
+
+若是ServerSocketUtil则必存储`server_addr_`还有最近一次使用的`client_addr_`
+
+若是ClientSocketUtil则只存储`client_addr_`
+
+**IP/PORT**
+
+IP值在ServerSocketUtil有所冗余
+
+ServerSocketUtil保存开放端口
+
+ClientSocketUtil保存自身IP值还有目标Server的开放端口
+
+## 函数相关
 
 ~~~C++
-#include<mysql/jdbc.h>
-#include<iostream>
-#include<cmath>
-#include"mysqlControl.h"
-using namespace std;
-#define BASE_NUM 2
-#define F(x) pow(BASE_NUM,x)
-MysqlControl con;
-
-void init() {
-	con.prestmt = con.con->prepareStatement("update value set val=0");
-	con.prestmt->execute();
-}
-//结果叠加
-void modify(const string& name,const int& val) {
-	con.prestmt = con.con->prepareStatement("update value set val=val+? where name=?");
-	con.prestmt->setInt(1, val);
-	con.prestmt->setString(2, name);
-	con.prestmt->execute();
-}
-//初步查询
-void search(const string& st,const int& val) {
-
-	string s = " select * from search where name like '%";
-	s = s + st + "%'";
-	con.prestmt = con.con->prepareStatement(s);
-	con.res = con.prestmt->executeQuery();
-	while (con.res->next()) {
-		//cout << con.res->getString("name") << endl;
-		modify(con.res->getString("name"), val);
-	}
-}
-//最终查询结果
-void getAns() {
-	con.prestmt = con.con->prepareStatement("select * from value order by val DESC");
-	con.res = con.prestmt->executeQuery();
-	while (con.res->next()) {
-		cout << con.res->getInt(1) << ' ' << con.res->getString(2) <<' '<<con.res->getInt(3)<< endl;
-	}
-}
-//字符串拆解
-void splitString(string s)
-{
-	init();
-	for (int i = 1; i <=s.size(); i++)
-		for (int j = 0; j < s.size(); j++)
-		{
-			if (i + j  <= s.size()) {
-				search(s.substr(j, i),F(i));
-			}
-		}
-	getAns();
-}
-
-int main() {
-	splitString("lucky_boy");
-	return 0;
-}
+    //不维护现套接字的数据传输
+    int sendMessage(const std::string& message)const;
+    int receiveMessage(char* message)const;
+    int receiveMessage(char* message,unsigned int lenn,unsigned int left)const;
+    int receiveAllMessage(char* message);
+    //指定套接字的数据传输
+    static int sendMessage(const SOCKET& sock,const std::string& message);
+    static int receiveMessage(const SOCKET& sock, char* message);
+    static int receiveMessage(const SOCKET& sock, char* message,unsigned int lenn, unsigned int left);
+    static int receiveAllMessage(const SOCKET& sock,char *message);
 ~~~
 
-## 线程池
+有两大类,默认套接字句柄/指定套接字句柄
 
-​	为避免重复创建销毁线程造成的资源时间消耗
+receiveAllMessage是由receiveMessage的带有指定读取长度重载版本编写而成
 
-- 线程组
-- 总任务队列
-- 线程任务队列
-- 任务分配线程
-- 任务处理线程
-- 任务接收线程
+## 传输格式
+
+传输格式为:   `长度/字符串`
+
+长度功能为指定字符串的长度,此要求在使用receiveAllMessage时必须遵守,否则会抛出异常

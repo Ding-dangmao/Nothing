@@ -1,0 +1,14 @@
+# ninja log v5
+14	1243	7463610918894484	CMakeFiles/Nothing.dir/main.cpp.obj	c14ac9b48f8073bf
+7	1403	7463593862723595	CMakeFiles/t2.dir/socket/socket_util.cpp.obj	18aae5ab12a50ea2
+17	1262	7463610919305524	CMakeFiles/Nothing.dir/socket/socket_util.cpp.obj	d27dd6551d430ec2
+1133	1223	7463595937813929	t2.exe	83e847d81e4c6e1a
+18	270	7463611937011702	build.ninja	d119369c69b51979
+1262	1356	7463610920224561	Nothing.exe	82ae5e7308695727
+4	1132	7463595936902970	CMakeFiles/t2.dir/t2.cpp.obj	2700696b525d5f1b
+20	1304	7463611976462187	CMakeFiles/Nothing.dir/main.cpp.obj	2ce3034d0ad5383a
+26	1339	7463611976818462	CMakeFiles/Nothing.dir/socket/socket_util.cpp.obj	6668ed1d9f21b44e
+1339	1430	7463611977701004	Nothing.exe	82ae5e7308695727
+23	1335	7463613640030496	CMakeFiles/Nothing.dir/main.cpp.obj	2ce3034d0ad5383a
+27	1353	7463613640346742	CMakeFiles/Nothing.dir/socket/socket_util.cpp.obj	6668ed1d9f21b44e
+1353	1443	7463613641280274	Nothing.exe	82ae5e7308695727
