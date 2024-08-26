@@ -54,3 +54,11 @@ receiveAllMessage是由receiveMessage的带有指定读取长度重载版本编�
 传输格式为:   `长度/字符串`
 
 长度功能为指定字符串的长度,此要求在使用receiveAllMessage时必须遵守,否则会抛出异常
+
+> cmake配置
+>
+> ```
+> link_libraries(ws2_32.lib)
+> ```
+>
+> 此库是必要的
