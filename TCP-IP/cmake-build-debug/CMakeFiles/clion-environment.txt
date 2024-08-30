@@ -2,4 +2,4 @@ ToolSet: 11.0 w64 (local)@F:\CLion 2023.3.4\bin\mingw
 Ninja: 1.11.1@F:\CLion 2023.3.4\bin\ninja\win\x64\ninja.exe
 Options: 
 
-Options:-DCMAKE_MAKE_PROGRAM=F:/CLion 2023.3.4/bin/ninja/win/x64/ninja.exe
+Options:

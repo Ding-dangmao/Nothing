@@ -9,6 +9,17 @@
  */
 SocketUtil::SocketUtil(std::string ip,unsigned int port):port_(port),ip_(std::move(ip)){}
 
+SocketUtil::SocketUtil(const SocketUtil& socket_util){
+    this->server_sock_=socket_util.server_sock_;
+    this->clnt_sock_=socket_util.clnt_sock_;
+    this->server_addr_=socket_util.server_addr_;
+    this->client_addr_=socket_util.client_addr_;
+    this->client_addr_sz=socket_util.client_addr_sz;
+
+    this->ip_=socket_util.ip_;
+    this->port_=socket_util.port_;
+}
+
 /**
  * @description: sendMessage重载1,用于传输数据
  * @param {std::string} 被传输字符串
@@ -46,7 +57,7 @@ int SocketUtil::receiveMessage(char* message)const {
  * @param {unsigned int} 接收左边界
  * @param {unsigned int} 接收右边界
  */
-int SocketUtil::receiveMessage(char* message,unsigned int lenn,unsigned int left)const {
+int SocketUtil::receiveMessage(char* message,int lenn,unsigned int left)const {
     int len = recv(clnt_sock_, message+left,lenn,0);
     return len;
 }
@@ -67,22 +78,25 @@ int SocketUtil::receiveMessage(const SOCKET& sock,char* message) {
  * @param {unsigned int} 接收左边界
  * @param {unsigned int} 接收右边界
  */
-int SocketUtil::receiveMessage(const SOCKET& sock, char* message,unsigned int lenn, unsigned int left) {
+int SocketUtil::receiveMessage(const SOCKET& sock, char* message,int lenn, unsigned int left) {
     int len = recv(sock, message+left,lenn,0);
     return len;
 }
 
-int SocketUtil::receiveAllMessage(char* message){
+int SocketUtil::receiveAllMessage(char* message)const{
     char length_char[TINY_CHAR];
     unsigned int left = 0; int len{};
 
     while (true) {
         int val=receiveMessage(length_char, 1, left);
         if(val==0)return 0;
+        if(val==-1){
+            lei_net_error::throwException("util/socket/socket_util.cpp socket error , check close sock",1);
+        }
         left++;
         if (length_char[left - 1] == '/')break;
         if (left > 10) {
-            lei_net_error::throwException("util/socket/socket_util.cpp-len read len error!",1);
+            lei_net_error::throwException("util/socket/socket_util.cpp-len socket read len error! please check Whether the transmission format meets the requirements ",1);
         }
     }
 
@@ -96,7 +110,7 @@ int SocketUtil::receiveAllMessage(char* message){
         receive_len += single_len;
         cnt++;
         if (cnt > 1e5)
-            lei_net_error::throwException("util/socket/socket_util.cpp-message read len error!", 1);
+            lei_net_error::throwException("util/socket/socket_util.cpp-message socket read string error! This is a source code error!", 1);
     }
 
     message[len]=0;
@@ -115,11 +129,15 @@ int SocketUtil::receiveAllMessage(const SOCKET& sock,char *message){
 
     while (true) {
         int val=receiveMessage(sock,length_char, 1, left);
+        std::cout<<val<<std::endl;
         if(val==0)return 0;
+        if(val==-1){
+            lei_net_error::throwException("util/socket/socket_util.cpp socket error : check close sock",2);
+        }
         left++;
         if (length_char[left - 1] == '/')break;
         if (left > 10) {
-            lei_net_error::throwException("util/socket/socket_util.cpp-len socket read len error!",1);
+            lei_net_error::throwException("util/socket/socket_util.cpp-len socket read len error! please check Whether the transmission format meets the requirements ",2);
         }
     }
 
@@ -134,7 +152,7 @@ int SocketUtil::receiveAllMessage(const SOCKET& sock,char *message){
         receive_len += single_len;
         cnt++;
         if (cnt > 1e5)
-            lei_net_error::throwException("util/socket/socket_util.cpp-message socket read string error", 2);
+            lei_net_error::throwException("util/socket/socket_util.cpp-message socket read string error! This is a source code error!", 2);
     }
 
     message[len]=0;
@@ -162,6 +180,18 @@ ServerSocketUtil::ServerSocketUtil(const unsigned int port): SocketUtil("NULL",p
         lei_net_error::throwException("util/socket_util.cpp server listen() create error!",2);
 
 }
+
+ServerSocketUtil::ServerSocketUtil(const ServerSocketUtil& server): SocketUtil(){
+    this->server_sock_=server.server_sock_;
+    this->clnt_sock_=server.clnt_sock_;
+    this->server_addr_=server.server_addr_;
+    this->client_addr_=server.client_addr_;
+    this->client_addr_sz=server.client_addr_sz;
+
+    this->ip_=server.ip_;
+    this->port_=server.port_;
+}
+
 /**
  * @description: 监听函数,监听客户端(相对关系)的连接请求
  */
@@ -179,6 +209,66 @@ ServerSocketUtil::~ServerSocketUtil(){
     closesocket(server_sock_);
 }
 
+/*IOServerSocketUtil*/
+
+void IOServerSocketUtil::argumentSet(long timeout_seconds,long timeout_microseconds){
+    member_structure_.timeout_seconds=timeout_seconds;
+    member_structure_.timeout_microseconds=timeout_microseconds;
+}
+
+void IOServerSocketUtil::addFD(const SOCKET& sock){
+    FD_SET(sock,&member_structure_.fd_set_);
+    ++member_structure_.fd_nums;
+}
+
+void IOServerSocketUtil::deleteFD(const SOCKET& sock){
+    FD_CLR(sock,&member_structure_.fd_set_);
+    --member_structure_.fd_nums;
+}
+
+void IOServerSocketUtil::simpleIOMultiplex(){
+    int return_val;
+    int len;
+    while(true) {
+        member_structure_.fd_set_cpy=member_structure_.fd_set_;
+        member_structure_.timeout.tv_sec = member_structure_.timeout_seconds;
+        member_structure_.timeout.tv_usec = member_structure_.timeout_microseconds;
+        fd_set& fdset=member_structure_.fd_set_cpy;
+        if((return_val= select(member_structure_.fd_nums,&fdset,
+                               0,0,&member_structure_.timeout))==-1){
+            lei_net_error::throwException("select error!",2);
+            break;
+        }
+        if(return_val==0){std::puts("timeout");continue;}
+
+        for(int i=0;i<fdset.fd_count;++i){
+            if(FD_ISSET(fdset.fd_array[i],&fdset)){
+                SOCKET sock=fdset.fd_array[i];
+                if(sock==server_socket_util_.server_sock_){
+                    SOCKET clnt = server_socket_util_.clnt_sock_=server_socket_util_.acceptSocket();
+                    addFD(clnt);
+                    SocketUtil::sendMessage(clnt,"20/receive your message");
+                    std::puts("something in");
+                }
+                else{
+                    char message[DATA_MAX_SIZE];
+                    len = SocketUtil::receiveAllMessage(sock,message);
+                    if(len==0){
+                        deleteFD(sock);
+                        std::puts("close sock");
+                        closesocket(sock);
+                    }else{
+                        //函数调用
+                        std::cout<<message<<'\n';
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 /*ClientSocketUtil*/
 
 /**
@@ -186,7 +276,7 @@ ServerSocketUtil::~ServerSocketUtil(){
  * @param {unsigned} ip 目标服务器IP地址值 默认值为Linux端服务器IP
  * @param {unsigned} port 目标服务器端口值 默认值为Linux端开放的9190端口
  */
-ClientSocketUtil::ClientSocketUtil(const std::string ip,const unsigned int port): SocketUtil(ip,port){
+ClientSocketUtil::ClientSocketUtil(const std::string& ip,const unsigned int port): SocketUtil(ip,port){
     if((clnt_sock_=socket(PF_INET,SOCK_STREAM,0))==INVALID_SOCKET)
         lei_net_error::throwException("util/socket_util.cpp client socket() create error!",2);
 

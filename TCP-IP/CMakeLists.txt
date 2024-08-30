@@ -10,3 +10,7 @@ include_directories(error socket)
 add_executable(Nothing
         main.cpp
         socket/socket_util.cpp)
+
+add_executable(test
+        test.cpp
+        socket/socket_util.cpp)

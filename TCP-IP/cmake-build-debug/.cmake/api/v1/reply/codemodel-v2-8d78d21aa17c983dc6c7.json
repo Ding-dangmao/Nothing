@@ -15,7 +15,8 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -30,7 +31,8 @@
 					"name" : "Nothing",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -41,6 +43,13 @@
 					"id" : "Nothing::@6890427a1f51a3e7e1df",
 					"jsonFile" : "target-Nothing-Debug-c1e7427670d2decda4a5.json",
 					"name" : "Nothing",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test-Debug-840594fbbc56c2c1b431.json",
+					"name" : "test",
 					"projectIndex" : 0
 				}
 			]
