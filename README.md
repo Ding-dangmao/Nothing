@@ -75,3 +75,25 @@ int main(){
 }
 ~~~
 
+## 拓展类
+
+### IOServerSocketUtil
+
+~~~C++
+    inline explicit IOServerSocketUtil(ServerSocketUtil& server): member_structure_(),server_socket_util_(server){
+        FD_ZERO(&member_structure_.fd_set_);
+        FD_SET(server.server_sock_,&member_structure_.fd_set_);
+        ++member_structure_.fd_nums;
+    }
+~~~
+
+​	简单封装了I/O复用,可以直接调用来达到效果,其构造函数接收一个ServerSocketUtil参数,并拷贝。
+
+#### 函数
+
+~~~C++
+template<class T>
+void simpleIOMultiplex(T);
+~~~
+
+接收一个必须接受字符串的函数(std::string),函数返回值没有要求,只有参数要求
