@@ -97,3 +97,7 @@ void simpleIOMultiplex(T);
 ~~~
 
 接收一个必须接受字符串的函数(std::string),函数返回值没有要求,只有参数要求
+
+## 待写传输
+
+![](.\img\传输.png)
