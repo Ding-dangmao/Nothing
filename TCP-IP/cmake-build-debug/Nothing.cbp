@@ -17,8 +17,8 @@
 					<DistClean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="Nothing">
-				<Option output="F:/Nothing/TCP-IP/cmake-build-debug/Nothing.exe" prefix_auto="0" extension_auto="0"/>
+			<Target title="tcp">
+				<Option output="F:/Nothing/TCP-IP/cmake-build-debug/tcp.exe" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="F:/Nothing/TCP-IP/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -35,14 +35,14 @@
 					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 Nothing"/>
+					<Build command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 tcp"/>
 					<CompileFile command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="Nothing/fast">
-				<Option output="F:/Nothing/TCP-IP/cmake-build-debug/Nothing.exe" prefix_auto="0" extension_auto="0"/>
+			<Target title="tcp/fast">
+				<Option output="F:/Nothing/TCP-IP/cmake-build-debug/tcp.exe" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="F:/Nothing/TCP-IP/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -59,7 +59,7 @@
 					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 Nothing/fast"/>
+					<Build command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 tcp/fast"/>
 					<CompileFile command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -135,14 +135,14 @@
 			</Target>
 		</Build>
 		<Unit filename="F:/Nothing/TCP-IP/main.cpp">
-			<Option target="Nothing"/>
+			<Option target="tcp"/>
 		</Unit>
 		<Unit filename="F:/Nothing/TCP-IP/socket/socket_util.cpp">
-			<Option target="Nothing"/>
+			<Option target="tcp"/>
 			<Option target="test"/>
 		</Unit>
 		<Unit filename="F:/Nothing/TCP-IP/socket/socket_util.h">
-			<Option target="Nothing"/>
+			<Option target="tcp"/>
 			<Option target="test"/>
 		</Unit>
 		<Unit filename="F:/Nothing/TCP-IP/test.cpp">

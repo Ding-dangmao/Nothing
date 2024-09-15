@@ -1,3 +1,0 @@
-"F:\CLion 2023.3.4\bin\cmake\win\x64\bin\cmake.exe" -E rm -f CMakeFiles\cli.dir/objects.a
-"F:\CLion 2023.3.4\bin\mingw\bin\ar.exe" qc CMakeFiles\cli.dir/objects.a @CMakeFiles\cli.dir\objects1.rsp
-"F:\CLion 2023.3.4\bin\mingw\bin\g++.exe" -g -Wl,--whole-archive CMakeFiles\cli.dir/objects.a -Wl,--no-whole-archive -o cli.exe -Wl,--out-implib,libcli.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\cli.dir\linkLibs.rsp

@@ -62,7 +62,7 @@ CMAKE_BINARY_DIR = F:\Nothing\TCP-IP\cmake-build-debug
 # Directory level rules for the build root directory
 
 # The main recursive "all" target.
-all: CMakeFiles/Nothing.dir/all
+all: CMakeFiles/tcp.dir/all
 all: CMakeFiles/test.dir/all
 .PHONY : all
 
@@ -71,35 +71,35 @@ preinstall:
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/Nothing.dir/clean
+clean: CMakeFiles/tcp.dir/clean
 clean: CMakeFiles/test.dir/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/Nothing.dir
+# Target rules for target CMakeFiles/tcp.dir
 
 # All Build rule for target.
-CMakeFiles/Nothing.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=F:\Nothing\TCP-IP\cmake-build-debug\CMakeFiles --progress-num=1,2,3 "Built target Nothing"
-.PHONY : CMakeFiles/Nothing.dir/all
+CMakeFiles/tcp.dir/all:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=F:\Nothing\TCP-IP\cmake-build-debug\CMakeFiles --progress-num=1,2,3 "Built target tcp"
+.PHONY : CMakeFiles/tcp.dir/all
 
 # Build rule for subdir invocation for target.
-CMakeFiles/Nothing.dir/rule: cmake_check_build_system
+CMakeFiles/tcp.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start F:\Nothing\TCP-IP\cmake-build-debug\CMakeFiles 3
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/Nothing.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 CMakeFiles/tcp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start F:\Nothing\TCP-IP\cmake-build-debug\CMakeFiles 0
-.PHONY : CMakeFiles/Nothing.dir/rule
+.PHONY : CMakeFiles/tcp.dir/rule
 
 # Convenience name for target.
-Nothing: CMakeFiles/Nothing.dir/rule
-.PHONY : Nothing
+tcp: CMakeFiles/tcp.dir/rule
+.PHONY : tcp
 
 # clean rule for target.
-CMakeFiles/Nothing.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/clean
-.PHONY : CMakeFiles/Nothing.dir/clean
+CMakeFiles/tcp.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/clean
+.PHONY : CMakeFiles/tcp.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/test.dir

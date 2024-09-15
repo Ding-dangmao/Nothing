@@ -2,6 +2,8 @@
 #define LEI_NET_SOCKET_UTIL_H
 
 #include<iostream>
+#include<algorithm>
+#include<vector>
 
 #include<winsock2.h>
 #include<cstdlib>
@@ -11,9 +13,12 @@
 #define DATA_MAX_SIZE 2048
 #define TINY_CHAR 16
 
-
+class ServerSocketUtil;
+class ClientSocketUtil;
 /*此类仅用于数据的传输,不对数据做任何处理(基类)*/
 class SocketUtil {
+    friend ServerSocketUtil;
+    friend ClientSocketUtil;
 public:
     //构造析构
     SocketUtil()=default;
@@ -34,8 +39,11 @@ public:
     static int receiveMessage(const SOCKET& sock, char* message,int lenn, unsigned int left);
     static int receiveAllMessage(const SOCKET& sock,char *message);
 
+    static void closeSocket(SOCKET& sock){closeSocket(sock);}
+
     SOCKET server_sock_;
     SOCKET clnt_sock_;
+private:
     SOCKADDR_IN server_addr_;
     SOCKADDR_IN client_addr_;
     int client_addr_sz;
@@ -46,14 +54,57 @@ public:
 
 /*此类仅用于数据的传输(public继承于SocketUtil)*/
 class ServerSocketUtil:public SocketUtil{
+
+class socketNotes:public std::vector<std::pair<SOCKET,std::string>> {
+public:
+    using std::vector<std::pair<SOCKET,std::string>>::vector;
+    /**
+     * @brief 添加新套接字进入sockets中
+     *
+     * @param sock 套接字
+     */
+    inline void pushElement(SOCKET sock){
+        std::vector<std::pair<SOCKET,std::string>>::push_back({sock,"no notes"});
+    }
+    /**
+    * @brief 设置备注备注仅可为最后一次获取的套接字设置
+    *
+    * @param notes 备注信息
+    */
+    inline void setNotes(std::string notes){
+        (this->end()-1)->second=std::move(notes);
+    }
+    /**
+     * @brief 通过备注查询套接字
+     *
+     * @param notes 备注信息
+     * @return 返回指向具有此备注的元素的迭代器
+     */
+    [[nodiscard]] std::vector<std::pair<SOCKET,std::string>>::iterator find(std::string notes){
+        std::vector<std::pair<SOCKET,std::string>>::iterator i=this->begin();
+        for(;i!=this->end();i++){
+            if(i->second==notes)return i;
+        }
+        return i;
+    }
+    /**
+     * @brief 通过迭代器删除套接字
+     *
+     * @param i 指向将删除元素的迭代器
+     */
+    inline void eraseElement(std::vector<std::pair<SOCKET,std::string>>::iterator i){
+        this->erase(i);
+    }
+    
+};
 public:
     ServerSocketUtil()=delete;
     explicit ServerSocketUtil(unsigned int port);
-
     ServerSocketUtil(const ServerSocketUtil&);
-
     SOCKET acceptSocket();
     ~ServerSocketUtil();
+
+    socketNotes sockets_;
 };
 
 /*此类仅用于数据的传输(public继承于SocketUtil)*/
@@ -64,6 +115,7 @@ public:
     ~ClientSocketUtil();
 };
 
+//#ifdef IO_MULTIPLEXING
 class IOServerSocketUtil{
 public:
     struct MemberStructure {
@@ -86,19 +138,29 @@ private:
     void deleteFD(const SOCKET& sock);
     void argumentSet(long timeout_seconds=5,long timeout_microseconds=5000);
 public:
-    template<class T>
-    void simpleIOMultiplex(T);
+    template<class T,class... Args>
+    void simpleIOMultiplex(T,Args...);
 
     ServerSocketUtil server_socket_util_;
     MemberStructure member_structure_;
 };
 
+//#endif //IO_MULTIPLEXING
+
 
 #endif //LEI_NET_SOCKET_UTIL_H
 
-
-template<typename T>
-void IOServerSocketUtil::simpleIOMultiplex(T function){
+//#ifdef IO_MULTIPLEXING
+/**
+ * @brief 进入IO复用模式,传递可调用数据与其参数,用以处理接收到的消息。新连接建立: something int,连接断开: close sock,设置的单次超时时间到达: timeout。
+ *
+ * @tparam T 可调用数据类型
+ * @tparam Args 包名
+ * @param function 可调用形参名
+ * @param args 包形参名
+ */
+template<class T,class... Args>
+void IOServerSocketUtil::simpleIOMultiplex(T function,Args... args){
     int return_val;
     int len;
     while(true) {
@@ -131,7 +193,7 @@ void IOServerSocketUtil::simpleIOMultiplex(T function){
                         closesocket(sock);
                     }else{
                         //函数调用
-                        T(message);
+                        T(args...);
                         //std::cout<<message<<'\n';
                     }
                 }
@@ -139,3 +201,4 @@ void IOServerSocketUtil::simpleIOMultiplex(T function){
         }
     }
 }
+//#endif

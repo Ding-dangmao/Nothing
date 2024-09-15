@@ -19,7 +19,6 @@ SocketUtil::SocketUtil(const SocketUtil& socket_util){
     this->ip_=socket_util.ip_;
     this->port_=socket_util.port_;
 }
-
 /**
  * @description: sendMessage重载1,用于传输数据
  * @param {std::string} 被传输字符串
@@ -120,6 +119,7 @@ int SocketUtil::receiveAllMessage(char* message)const{
 
 /**
  * @description: 此函数获得数据为无标识长度数据不可直接传输
+ *
  * @param{int} sock
  * @param {char*} message 接收数据字符串
  */
@@ -201,31 +201,50 @@ SOCKET ServerSocketUtil::acceptSocket(){
     client_addr_sz=sizeof(client_addr_);
     if((clnt_sock_=accept(server_sock_,(SOCKADDR*)&client_addr_,&client_addr_sz))==INVALID_SOCKET)
         lei_net_error::throwException("util/socket_util.cpp server accept() create error!",2);
+
+    sockets_.pushElement(clnt_sock_);
     return clnt_sock_;
 }
+/**
+ * @brief 设置套接字备注
+ *
+ * @param notes 备注
+ */
+
 
 ServerSocketUtil::~ServerSocketUtil(){
     //信息传递套接字需考虑
     closesocket(server_sock_);
 }
 
+
+
+//#ifdef IO_MULTIPLEXING
 /*IOServerSocketUtil*/
 
 void IOServerSocketUtil::argumentSet(long timeout_seconds,long timeout_microseconds){
     member_structure_.timeout_seconds=timeout_seconds;
     member_structure_.timeout_microseconds=timeout_microseconds;
 }
-
+/**
+ *  @brief  将新建立连接的套接字注册
+ *
+ * @param sock  新连接的套接字
+ */
 void IOServerSocketUtil::addFD(const SOCKET& sock){
     FD_SET(sock,&member_structure_.fd_set_);
     ++member_structure_.fd_nums;
 }
-
+/**
+ * @brief 将断开的套接字删除
+ *
+ * @param sock 断开的套接字
+ */
 void IOServerSocketUtil::deleteFD(const SOCKET& sock){
     FD_CLR(sock,&member_structure_.fd_set_);
     --member_structure_.fd_nums;
 }
-
+//#endif
 
 
 

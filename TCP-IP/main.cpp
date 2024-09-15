@@ -13,8 +13,9 @@ int main() {
     WSADATA wsadata;
     if(WSAStartup(MAKEWORD(2,2),&wsadata));
     ServerSocketUtil s(9190);
-    IOServerSocketUtil w(s);
-    w.simpleIOMultiplex(said);
+    //IOServerSocketUtil w(s);
+    //w.simpleIOMultiplex(said);
+    s.acceptSocket();
 
     WSACleanup();
     return 0;

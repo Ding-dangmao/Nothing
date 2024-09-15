@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Nothing.exe"
+			"path" : "tcp.exe"
 		},
 		{
-			"path" : "Nothing.pdb"
+			"path" : "tcp.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -75,7 +75,7 @@
 			]
 		}
 	],
-	"id" : "Nothing::@6890427a1f51a3e7e1df",
+	"id" : "tcp::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -100,8 +100,8 @@
 		],
 		"language" : "CXX"
 	},
-	"name" : "Nothing",
-	"nameOnDisk" : "Nothing.exe",
+	"name" : "tcp",
+	"nameOnDisk" : "tcp.exe",
 	"paths" : 
 	{
 		"build" : ".",

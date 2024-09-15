@@ -8,7 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "F:/Nothing/TCP-IP/socket/socket_util.cpp" "CMakeFiles/cli.dir/socket/socket_util.cpp.obj" "gcc" "CMakeFiles/cli.dir/socket/socket_util.cpp.obj.d"
+  "F:/Nothing/TCP-IP/main.cpp" "CMakeFiles/tcp.dir/main.cpp.obj" "gcc" "CMakeFiles/tcp.dir/main.cpp.obj.d"
+  "F:/Nothing/TCP-IP/socket/socket_util.cpp" "CMakeFiles/tcp.dir/socket/socket_util.cpp.obj" "gcc" "CMakeFiles/tcp.dir/socket/socket_util.cpp.obj.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

@@ -101,3 +101,8 @@ void simpleIOMultiplex(T);
 ## 待写传输
 
 ![](.\img\传输.png)
+
+## 难以处理的点
+
+​	由于套接字的使用方式,互相的关联性不可预测,对于部分套接字的销毁难以处理所以在对于**ServerSocketUtil**类的析构函数处理中并未对其接受到的套接字进行任何处理,而是交由使用者使用**static void closeSocket(SOCKET& sock)**这一静态成员函数进行自发处理
+

@@ -116,17 +116,17 @@ depend:
 .PHONY : depend
 
 #=============================================================================
-# Target rules for targets named Nothing
+# Target rules for targets named tcp
 
 # Build rule for target.
-Nothing: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 Nothing
-.PHONY : Nothing
+tcp: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 tcp
+.PHONY : tcp
 
 # fast build rule for target.
-Nothing/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/build
-.PHONY : Nothing/fast
+tcp/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/build
+.PHONY : tcp/fast
 
 #=============================================================================
 # Target rules for targets named test
@@ -146,7 +146,7 @@ main.obj: main.cpp.obj
 
 # target to build an object file
 main.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/main.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/main.cpp.obj
 .PHONY : main.cpp.obj
 
 main.i: main.cpp.i
@@ -154,7 +154,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/main.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -162,7 +162,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/main.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 socket/socket_util.obj: socket/socket_util.cpp.obj
@@ -170,7 +170,7 @@ socket/socket_util.obj: socket/socket_util.cpp.obj
 
 # target to build an object file
 socket/socket_util.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/socket/socket_util.cpp.obj
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/socket/socket_util.cpp.obj
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/socket/socket_util.cpp.obj
 .PHONY : socket/socket_util.cpp.obj
 
@@ -179,7 +179,7 @@ socket/socket_util.i: socket/socket_util.cpp.i
 
 # target to preprocess a source file
 socket/socket_util.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/socket/socket_util.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/socket/socket_util.cpp.i
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/socket/socket_util.cpp.i
 .PHONY : socket/socket_util.cpp.i
 
@@ -188,7 +188,7 @@ socket/socket_util.s: socket/socket_util.cpp.s
 
 # target to generate assembly for a file
 socket/socket_util.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles\Nothing.dir\build.make CMakeFiles/Nothing.dir/socket/socket_util.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tcp.dir\build.make CMakeFiles/tcp.dir/socket/socket_util.cpp.s
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/socket/socket_util.cpp.s
 .PHONY : socket/socket_util.cpp.s
 
@@ -224,7 +224,7 @@ help:
 	@echo ... depend
 	@echo ... edit_cache
 	@echo ... rebuild_cache
-	@echo ... Nothing
+	@echo ... tcp
 	@echo ... test
 	@echo ... main.obj
 	@echo ... main.i
