@@ -93,9 +93,9 @@ public:
      * @param i 指向将删除元素的迭代器
      */
     inline void eraseElement(std::vector<std::pair<SOCKET,std::string>>::iterator i){
-        this->erase(i);
+        std::vector<std::pair<SOCKET,std::string>>::erase(i);
     }
-    
+
 };
 public:
     ServerSocketUtil()=delete;

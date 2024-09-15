@@ -89,6 +89,12 @@ int main(){
 
 ​	简单封装了I/O复用,可以直接调用来达到效果,其构造函数接收一个ServerSocketUtil参数,并拷贝。
 
+### socketNotes
+
+​	继承自std::vector<std::pair<SOCKET,std::string>>::vector 拥有其所有功能
+
+​	此类用于套接字管理,存储套接字与其备注信息,通过备注信息查询套接字
+
 #### 函数
 
 ~~~C++
