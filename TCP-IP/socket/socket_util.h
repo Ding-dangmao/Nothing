@@ -13,6 +13,7 @@
 #define DATA_MAX_SIZE 2048
 #define TINY_CHAR 16
 
+class socketNotes;
 class ServerSocketUtil;
 class ClientSocketUtil;
 /*此类仅用于数据的传输,不对数据做任何处理(基类)*/
@@ -52,9 +53,7 @@ private:
     unsigned int port_;
 };
 
-/*此类仅用于数据的传输(public继承于SocketUtil)*/
-class ServerSocketUtil:public SocketUtil{
-
+//标签
 class socketNotes:public std::vector<std::pair<SOCKET,std::string>> {
 public:
     using std::vector<std::pair<SOCKET,std::string>>::vector;
@@ -78,7 +77,7 @@ public:
      * @brief 通过备注查询套接字
      *
      * @param notes 备注信息
-     * @return 返回指向具有此备注的元素的迭代器
+     * @return 返回指向具有此备注的元素的迭代器,若无则返回尾部迭代器
      */
     [[nodiscard]] std::vector<std::pair<SOCKET,std::string>>::iterator find(std::string notes){
         std::vector<std::pair<SOCKET,std::string>>::iterator i=this->begin();
@@ -97,6 +96,9 @@ public:
     }
 
 };
+
+/*此类仅用于数据的传输(public继承于SocketUtil)*/
+class ServerSocketUtil:public SocketUtil{
 public:
     ServerSocketUtil()=delete;
     explicit ServerSocketUtil(unsigned int port);
@@ -133,10 +135,10 @@ public:
         FD_SET(server.server_sock_,&member_structure_.fd_set_);
         ++member_structure_.fd_nums;
     }
+    void argumentSet(long timeout_seconds=5,long timeout_microseconds=5000);
 private:
     void addFD(const SOCKET& sock);
     void deleteFD(const SOCKET& sock);
-    void argumentSet(long timeout_seconds=5,long timeout_microseconds=5000);
 public:
     template<class T,class... Args>
     void simpleIOMultiplex(T,Args...);
@@ -160,7 +162,7 @@ public:
  * @param args 包形参名
  */
 template<class T,class... Args>
-void IOServerSocketUtil::simpleIOMultiplex(T function,Args... args){
+void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
     int return_val;
     int len;
     while(true) {
@@ -193,7 +195,7 @@ void IOServerSocketUtil::simpleIOMultiplex(T function,Args... args){
                         closesocket(sock);
                     }else{
                         //函数调用
-                        T(args...);
+                        function_(message);
                         //std::cout<<message<<'\n';
                     }
                 }

@@ -91,11 +91,44 @@ int main(){
 
 ### socketNotes
 
-​	继承自std::vector<std::pair<SOCKET,std::string>>::vector 拥有其所有功能
+​	继承自std::vector<std::pair<SOCKET,std::string>>::vector 拥有其所有功能,并添加了一些额外功能
 
 ​	此类用于套接字管理,存储套接字与其备注信息,通过备注信息查询套接字
+#### 成员函数
 
-#### 函数
+**pushElement**
+
+~~~C++
+inline void pushElement(SOCKET sock)
+~~~
+
+向容器中添加一个套接字,并使用默认标签(no notes),此标签可后续添加
+
+**setNotes**
+
+~~~C++
+inline void setNotes(std::string notes)
+~~~
+
+为套接字设置标签,执行此行为的容器上一步操作必须为pushElement.
+
+**find**
+
+~~~C++
+[[nodiscard]] std::vector<std::pair<SOCKET,std::string>>::iterator find(std::string notes)
+~~~
+
+通过备注信息查询套接字,并返回指向其套接字的迭代器。若无则返回尾部迭代器。
+
+**eraseElement**
+
+~~~C++
+inline void eraseElement(std::vector<std::pair<SOCKET,std::string>>::iterator i)
+~~~
+
+通过套接字迭代器删除套接字,一般用find查找后获得套接字之后删除。
+
+### 函数
 
 ~~~C++
 template<class T>

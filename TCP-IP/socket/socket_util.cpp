@@ -129,7 +129,7 @@ int SocketUtil::receiveAllMessage(const SOCKET& sock,char *message){
 
     while (true) {
         int val=receiveMessage(sock,length_char, 1, left);
-        std::cout<<val<<std::endl;
+        //std::cout<<val<<std::endl;
         if(val==0)return 0;
         if(val==-1){
             lei_net_error::throwException("util/socket/socket_util.cpp socket error : check close sock",2);

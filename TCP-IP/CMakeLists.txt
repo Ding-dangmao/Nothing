@@ -7,10 +7,16 @@ link_libraries(ws2_32.lib)
 
 include_directories(error socket)
 
+link_directories(./)
+
 add_executable(tcp
-        main.cpp
-        socket/socket_util.cpp)
+       main.cpp
+        socket/socket_util.cpp
+)
 
 add_executable(test
         test.cpp
-        socket/socket_util.cpp)
+        socket/socket_util.cpp
+)
+
+#add_subdirectory(socket)
