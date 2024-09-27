@@ -19,6 +19,9 @@ int main() {
         w.simpleIOMultiplex(said);
         //s.acceptSocket();
     }
+    //SocketUtil x;
+    //SocketUtil d;
+    //x=d;
     WSACleanup();
     return 0;
 }

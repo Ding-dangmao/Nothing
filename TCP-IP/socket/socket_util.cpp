@@ -9,16 +9,6 @@
  */
 SocketUtil::SocketUtil(std::string ip,unsigned int port):port_(port),ip_(std::move(ip)){}
 
-SocketUtil::SocketUtil(const SocketUtil& socket_util){
-    this->server_sock_=socket_util.server_sock_;
-    this->clnt_sock_=socket_util.clnt_sock_;
-    this->server_addr_=socket_util.server_addr_;
-    this->client_addr_=socket_util.client_addr_;
-    this->client_addr_sz=socket_util.client_addr_sz;
-
-    this->ip_=socket_util.ip_;
-    this->port_=socket_util.port_;
-}
 /**
  * @description: sendMessage重载1,用于传输数据
  * @param {std::string} 被传输字符串
@@ -181,17 +171,6 @@ ServerSocketUtil::ServerSocketUtil(const unsigned int port): SocketUtil("NULL",p
 
 }
 
-ServerSocketUtil::ServerSocketUtil(const ServerSocketUtil& server): SocketUtil(){
-    this->server_sock_=server.server_sock_;
-    this->clnt_sock_=server.clnt_sock_;
-    this->server_addr_=server.server_addr_;
-    this->client_addr_=server.client_addr_;
-    this->client_addr_sz=server.client_addr_sz;
-
-    this->ip_=server.ip_;
-    this->port_=server.port_;
-}
-
 /**
  * @description: 监听函数,监听客户端(相对关系)的连接请求
  */
@@ -245,8 +224,6 @@ void IOServerSocketUtil::deleteFD(const SOCKET& sock){
     --member_structure_.fd_nums;
 }
 //#endif
-
-
 
 /*ClientSocketUtil*/
 

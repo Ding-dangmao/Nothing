@@ -24,7 +24,7 @@ public:
     //构造析构
     SocketUtil()=default;
     SocketUtil(std::string ip,unsigned int port);
-    SocketUtil(const SocketUtil&);
+    SocketUtil(const SocketUtil&)=default;
     SocketUtil& operator=(const SocketUtil&) = delete;
     ~SocketUtil()=default;
 
@@ -53,7 +53,7 @@ private:
     unsigned int port_;
 };
 
-//标签
+
 class socketNotes:public std::vector<std::pair<SOCKET,std::string>> {
 public:
     using std::vector<std::pair<SOCKET,std::string>>::vector;
@@ -102,7 +102,7 @@ class ServerSocketUtil:public SocketUtil{
 public:
     ServerSocketUtil()=delete;
     explicit ServerSocketUtil(unsigned int port);
-    ServerSocketUtil(const ServerSocketUtil&);
+    ServerSocketUtil(const ServerSocketUtil&)=default;
     SOCKET acceptSocket();
     ~ServerSocketUtil();
 
