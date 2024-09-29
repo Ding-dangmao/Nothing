@@ -15,6 +15,7 @@
 		[
 			"add_executable",
 			"link_directories",
+			"add_compile_definitions",
 			"include_directories"
 		],
 		"files" : 
@@ -29,19 +30,25 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 17,
+				"line" : 26,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 10,
+				"line" : 19,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 8,
+				"line" : 11,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 16,
 				"parent" : 0
 			}
 		]
@@ -55,14 +62,21 @@
 					"fragment" : "-g -fdiagnostics-color=always"
 				}
 			],
-			"includes" : 
+			"defines" : 
 			[
 				{
 					"backtrace" : 3,
+					"define" : "Windows=true"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 4,
 					"path" : "F:/Nothing/TCP-IP/error"
 				},
 				{
-					"backtrace" : 3,
+					"backtrace" : 4,
 					"path" : "F:/Nothing/TCP-IP/socket"
 				}
 			],

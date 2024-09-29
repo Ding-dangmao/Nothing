@@ -5,10 +5,37 @@
 #include<algorithm>
 #include<vector>
 
-#include<winsock2.h>
+
 #include<cstdlib>
 
 #include"errors.h"
+
+#ifdef Windows
+#include<winsock2.h>
+using socket_N=SOCKET;
+using sockaddr_in_N = SOCKADDR_IN;
+using sockaddr_N = SOCKADDR;
+using socklen_t_N = int;
+
+#define SEND_MESSAGE(sock_N,string_N,len_N,flags_N) send(sock_N,string_N.c_str(),len_N,flags_N)
+#define RECEIVE_MESSAGE(sock_N,string_N,len_N,flags_N) recv(sock_N,string_N,len_N,flags_N)
+
+#endif
+
+#ifdef Linux
+#include<sys/socket.h>
+#include<arpa/inet.h>
+#include<stdlib.h>
+#include<unistd.h>
+using socket_N=int;
+using sockaddr_in_N = struct sockaddr_in;
+using sockaddr_N = struct sockaddr;
+using socklen_t_N = socklen_t;
+
+
+
+#endif
+
 
 #define DATA_MAX_SIZE 2048
 #define TINY_CHAR 16
@@ -35,35 +62,41 @@ public:
     int receiveMessage(char* message,int lenn,unsigned int left)const;
     int receiveAllMessage(char* message)const;
     //指定套接字的数据传输
-    static int sendMessage(const SOCKET& sock,const std::string& message);
-    static int receiveMessage(const SOCKET& sock, char* message);
-    static int receiveMessage(const SOCKET& sock, char* message,int lenn, unsigned int left);
-    static int receiveAllMessage(const SOCKET& sock,char *message);
+    static int sendMessage(const socket_N& sock,const std::string& message);
+    static int receiveMessage(const socket_N & sock, char* message);
+    static int receiveMessage(const socket_N& sock, char* message,int lenn, unsigned int left);
+    static int receiveAllMessage(const socket_N& sock,char *message);
 
-    static void closeSocket(SOCKET& sock){closeSocket(sock);}
+    static void closeSocket(socket_N& sock){
+#ifdef Windows
+        closeSocket(sock);
+#else
+        close(sock);
+#endif
+    }
 
-    SOCKET server_sock_;
-    SOCKET clnt_sock_;
+    socket_N server_sock_;
+    socket_N clnt_sock_;
 private:
-    SOCKADDR_IN server_addr_;
-    SOCKADDR_IN client_addr_;
-    int client_addr_sz;
+    sockaddr_in_N server_addr_;
+    sockaddr_in_N client_addr_;
+    socklen_t_N client_addr_sz;
 
     std::string ip_;
     unsigned int port_;
 };
 
 
-class socketNotes:public std::vector<std::pair<SOCKET,std::string>> {
+class socketNotes:public std::vector<std::pair<socket_N,std::string>> {
 public:
-    using std::vector<std::pair<SOCKET,std::string>>::vector;
+    using std::vector<std::pair<socket_N,std::string>>::vector;
     /**
      * @brief 添加新套接字进入sockets中
      *
      * @param sock 套接字
      */
-    inline void pushElement(SOCKET sock){
-        std::vector<std::pair<SOCKET,std::string>>::push_back({sock,"no notes"});
+    inline void pushElement(socket_N sock){
+        std::vector<std::pair<socket_N,std::string>>::push_back({sock,"no notes"});
     }
     /**
     * @brief 设置备注备注仅可为最后一次获取的套接字设置
@@ -79,8 +112,8 @@ public:
      * @param notes 备注信息
      * @return 返回指向具有此备注的元素的迭代器,若无则返回尾部迭代器
      */
-    [[nodiscard]] std::vector<std::pair<SOCKET,std::string>>::iterator find(std::string notes){
-        std::vector<std::pair<SOCKET,std::string>>::iterator i=this->begin();
+    [[nodiscard]] std::vector<std::pair<socket_N,std::string>>::iterator find(std::string notes){
+        std::vector<std::pair<socket_N,std::string>>::iterator i=this->begin();
         for(;i!=this->end();i++){
             if(i->second==notes)return i;
         }
@@ -91,8 +124,8 @@ public:
      *
      * @param i 指向将删除元素的迭代器
      */
-    inline void eraseElement(std::vector<std::pair<SOCKET,std::string>>::iterator i){
-        std::vector<std::pair<SOCKET,std::string>>::erase(i);
+    inline void eraseElement(std::vector<std::pair<socket_N,std::string>>::iterator i){
+        std::vector<std::pair<socket_N,std::string>>::erase(i);
     }
 
 };
@@ -103,7 +136,7 @@ public:
     ServerSocketUtil()=delete;
     explicit ServerSocketUtil(unsigned int port);
     ServerSocketUtil(const ServerSocketUtil&)=default;
-    SOCKET acceptSocket();
+    socket_N acceptSocket();
     ~ServerSocketUtil();
 
     socketNotes sockets_;
@@ -118,6 +151,7 @@ public:
 };
 
 //#ifdef IO_MULTIPLEXING
+/*
 class IOServerSocketUtil{
 public:
     struct MemberStructure {
@@ -132,13 +166,14 @@ public:
     IOServerSocketUtil()=delete;
     inline explicit IOServerSocketUtil(ServerSocketUtil& server): member_structure_(),server_socket_util_(server){
         FD_ZERO(&member_structure_.fd_set_);
-        FD_SET(server.server_sock_,&member_structure_.fd_set_);
-        ++member_structure_.fd_nums;
+        //FD_SET(server.server_sock_,&member_structure_.fd_set_);
+        //++member_structure_.fd_nums;
+        addFD(server.server_sock_);
     }
     void argumentSet(long timeout_seconds=5,long timeout_microseconds=5000);
 private:
-    void addFD(const SOCKET& sock);
-    void deleteFD(const SOCKET& sock);
+    void addFD(const socket_N& sock);
+    void deleteFD(const socket_N& sock);
 public:
     template<class T,class... Args>
     void simpleIOMultiplex(T,Args...);
@@ -146,13 +181,28 @@ public:
     ServerSocketUtil server_socket_util_;
     MemberStructure member_structure_;
 };
+*/
+#ifdef Windows_IOCP
+class IOMultiplexIOCP{
+public:
 
-//#endif //IO_MULTIPLEXING
+};
+#endif
+
+#ifdef Linux_EPOLL
+class IOMultiplexEPOLL{
+public:
+
+};
+#endif
+
+
 
 
 #endif //LEI_NET_SOCKET_UTIL_H
 
 //#ifdef IO_MULTIPLEXING
+
 /**
  * @brief 进入IO复用模式,传递可调用数据与其参数,用以处理接收到的消息。新连接建立: something int,连接断开: close sock,设置的单次超时时间到达: timeout。
  *
@@ -161,17 +211,20 @@ public:
  * @param function 可调用形参名
  * @param args 包形参名
  */
+ /*
 template<class T,class... Args>
 void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
     int return_val;
     int len;
     while(true) {
+
         member_structure_.fd_set_cpy=member_structure_.fd_set_;
         member_structure_.timeout.tv_sec = member_structure_.timeout_seconds;
         member_structure_.timeout.tv_usec = member_structure_.timeout_microseconds;
+
         fd_set& fdset=member_structure_.fd_set_cpy;
         if((return_val= select(member_structure_.fd_nums,&fdset,
-                               0,0,&member_structure_.timeout))==-1){
+                               nullptr,nullptr,&member_structure_.timeout))==-1){
             lei_net_error::throwException("select error!",2);
             break;
         }
@@ -179,9 +232,9 @@ void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
 
         for(int i=0;i<fdset.fd_count;++i){
             if(FD_ISSET(fdset.fd_array[i],&fdset)){
-                SOCKET sock=fdset.fd_array[i];
+                socket_N sock=fdset.fd_array[i];
                 if(sock==server_socket_util_.server_sock_){
-                    SOCKET clnt = server_socket_util_.clnt_sock_=server_socket_util_.acceptSocket();
+                    socket_N clnt = server_socket_util_.clnt_sock_=server_socket_util_.acceptSocket();
                     addFD(clnt);
                     SocketUtil::sendMessage(clnt,"20/receive your message");
                     std::puts("something in");
@@ -203,4 +256,5 @@ void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
         }
     }
 }
+*/
 //#endif

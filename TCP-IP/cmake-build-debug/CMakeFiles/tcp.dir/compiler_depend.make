@@ -413,7 +413,7 @@ CMakeFiles/tcp.dir/main.cpp.obj: F:/Nothing/TCP-IP/main.cpp \
   F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypes.h \
   F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypesbase.h \
   F:/Nothing/TCP-IP/socket/errors.h \
-  F:/Nothing/TCP-IP/socket/socket_util.h
+  F:/Nothing/TCP-IP/socket/socket_util.hpp
 
 CMakeFiles/tcp.dir/socket/socket_util.cpp.obj: F:/Nothing/TCP-IP/socket/socket_util.cpp \
   F:/CLion\ 2023.3.4/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/adxintrin.h \
@@ -815,7 +815,7 @@ CMakeFiles/tcp.dir/socket/socket_util.cpp.obj: F:/Nothing/TCP-IP/socket/socket_u
   F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypes.h \
   F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypesbase.h \
   F:/Nothing/TCP-IP/socket/errors.h \
-  F:/Nothing/TCP-IP/socket/socket_util.h
+  F:/Nothing/TCP-IP/socket/socket_util.hpp
 
 
 F:/CLion\ 2023.3.4/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/avx512vldqintrin.h:
@@ -1642,6 +1642,6 @@ F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/winuser.h:
 
 F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/winver.h:
 
-F:/Nothing/TCP-IP/socket/socket_util.h:
+F:/Nothing/TCP-IP/socket/socket_util.hpp:
 
 F:/Nothing/TCP-IP/socket/socket_util.cpp:

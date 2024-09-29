@@ -24,6 +24,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DWindows=true"/>
 					<Add directory="F:/Nothing/TCP-IP/error"/>
 					<Add directory="F:/Nothing/TCP-IP/socket"/>
 					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
@@ -48,6 +49,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DWindows=true"/>
 					<Add directory="F:/Nothing/TCP-IP/error"/>
 					<Add directory="F:/Nothing/TCP-IP/socket"/>
 					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
@@ -72,6 +74,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DWindows=true"/>
 					<Add directory="F:/Nothing/TCP-IP/error"/>
 					<Add directory="F:/Nothing/TCP-IP/socket"/>
 					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
@@ -96,6 +99,7 @@
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
+					<Add option="-DWindows=true"/>
 					<Add directory="F:/Nothing/TCP-IP/error"/>
 					<Add directory="F:/Nothing/TCP-IP/socket"/>
 					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
@@ -141,7 +145,7 @@
 			<Option target="tcp"/>
 			<Option target="test"/>
 		</Unit>
-		<Unit filename="F:/Nothing/TCP-IP/socket/socket_util.h">
+		<Unit filename="F:/Nothing/TCP-IP/socket/socket_util.hpp">
 			<Option target="tcp"/>
 			<Option target="test"/>
 		</Unit>

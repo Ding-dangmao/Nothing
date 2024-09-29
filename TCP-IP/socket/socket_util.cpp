@@ -1,4 +1,4 @@
-#include "socket_util.h"
+#include "socket_util.hpp"
 
 /*(基类)*/
 
@@ -16,7 +16,8 @@ SocketUtil::SocketUtil(std::string ip,unsigned int port):port_(port),ip_(std::mo
 int SocketUtil::sendMessage(const std::string& message)const{
     int len = static_cast<int>(message.size());
     //send(clnt_sock_, message.c_str(), len, 0);
-    send(clnt_sock_, message.c_str(), len,0);
+    //send(clnt_sock_, message.c_str(), len,0);
+    SEND_MESSAGE(clnt_sock_,message,len,0);
     return len;
 }
 /**
@@ -24,9 +25,10 @@ int SocketUtil::sendMessage(const std::string& message)const{
  * @param {int} sock 目标套接字
  * @param {std::string} 被传输字符串
  */
-int SocketUtil::sendMessage(const SOCKET& sock,const std::string& message) {
+int SocketUtil::sendMessage(const socket_N& sock,const std::string& message) {
     int len = static_cast<int>(message.size());
-    send(sock, message.c_str(), len,0);
+    //send(sock, message.c_str(), len,0);
+    SEND_MESSAGE(sock,message,len,0);
     return len;
 }
 /**
@@ -34,7 +36,8 @@ int SocketUtil::sendMessage(const SOCKET& sock,const std::string& message) {
  * @param {char*} 接收数据字符串
  */
 int SocketUtil::receiveMessage(char* message)const {
-    int len = recv(clnt_sock_, message, DATA_MAX_SIZE,0);
+    //int len = recv(clnt_sock_, message, DATA_MAX_SIZE,0);
+    int len= RECEIVE_MESSAGE(clnt_sock_,message,DATA_MAX_SIZE-1,0);
     if(len==-1)
         lei_net_error::throwException("socket/socket_util recv error!",2);
     return len;
@@ -47,7 +50,8 @@ int SocketUtil::receiveMessage(char* message)const {
  * @param {unsigned int} 接收右边界
  */
 int SocketUtil::receiveMessage(char* message,int lenn,unsigned int left)const {
-    int len = recv(clnt_sock_, message+left,lenn,0);
+    //int len = recv(clnt_sock_, message+left,lenn,0);
+    int len= RECEIVE_MESSAGE(clnt_sock_,message+left,lenn,0);
     return len;
 }
 
@@ -55,8 +59,9 @@ int SocketUtil::receiveMessage(char* message,int lenn,unsigned int left)const {
  * @description: receiveMessage重载3,用于接收数据,指定接收数据的套接字
  * @param {char*} 接收数据字符串
  */
-int SocketUtil::receiveMessage(const SOCKET& sock,char* message) {
-    int len = recv(sock, message, sizeof(message)-1,0);
+int SocketUtil::receiveMessage(const socket_N& sock,char* message) {
+    //int len = recv(sock, message, sizeof(message)-1,0);
+    int len= RECEIVE_MESSAGE(sock,message,DATA_MAX_SIZE-1,0);
     return len;
 }
 /**
@@ -67,8 +72,9 @@ int SocketUtil::receiveMessage(const SOCKET& sock,char* message) {
  * @param {unsigned int} 接收左边界
  * @param {unsigned int} 接收右边界
  */
-int SocketUtil::receiveMessage(const SOCKET& sock, char* message,int lenn, unsigned int left) {
-    int len = recv(sock, message+left,lenn,0);
+int SocketUtil::receiveMessage(const socket_N& sock, char* message,int lenn, unsigned int left) {
+    //int len = recv(sock, message+left,lenn,0);
+    int len= RECEIVE_MESSAGE(sock,message+left,lenn,0);
     return len;
 }
 
@@ -113,7 +119,7 @@ int SocketUtil::receiveAllMessage(char* message)const{
  * @param{int} sock
  * @param {char*} message 接收数据字符串
  */
-int SocketUtil::receiveAllMessage(const SOCKET& sock,char *message){
+int SocketUtil::receiveAllMessage(const socket_N& sock,char *message){
     char length_char[TINY_CHAR];
     unsigned int left{}; int len{};
 
@@ -164,7 +170,7 @@ ServerSocketUtil::ServerSocketUtil(const unsigned int port): SocketUtil("NULL",p
     server_addr_.sin_addr.s_addr=htonl(INADDR_ANY);
     server_addr_.sin_port=htons(port);
 
-    if(bind(server_sock_,(SOCKADDR*)&server_addr_,sizeof(server_addr_))==SOCKET_ERROR)
+    if(bind(server_sock_,(sockaddr_N*)&server_addr_,sizeof(server_addr_))==SOCKET_ERROR)
         lei_net_error::throwException("util/socket_util.cpp server bind() create error!",2);
     if(listen(server_sock_,5)==SOCKET_ERROR)
         lei_net_error::throwException("util/socket_util.cpp server listen() create error!",2);
@@ -174,11 +180,11 @@ ServerSocketUtil::ServerSocketUtil(const unsigned int port): SocketUtil("NULL",p
 /**
  * @description: 监听函数,监听客户端(相对关系)的连接请求
  */
-SOCKET ServerSocketUtil::acceptSocket(){
+socket_N ServerSocketUtil::acceptSocket(){
     //待定
     //SOCKET client_sock; b b 
     client_addr_sz=sizeof(client_addr_);
-    if((clnt_sock_=accept(server_sock_,(SOCKADDR*)&client_addr_,&client_addr_sz))==INVALID_SOCKET)
+    if((clnt_sock_=accept(server_sock_,(sockaddr_N*)&client_addr_,&client_addr_sz))==INVALID_SOCKET)
         lei_net_error::throwException("util/socket_util.cpp server accept() create error!",2);
 
     sockets_.pushElement(clnt_sock_);
@@ -200,29 +206,35 @@ ServerSocketUtil::~ServerSocketUtil(){
 
 //#ifdef IO_MULTIPLEXING
 /*IOServerSocketUtil*/
-
+/*
 void IOServerSocketUtil::argumentSet(long timeout_seconds,long timeout_microseconds){
     member_structure_.timeout_seconds=timeout_seconds;
     member_structure_.timeout_microseconds=timeout_microseconds;
 }
+ */
 /**
  *  @brief  将新建立连接的套接字注册
  *
  * @param sock  新连接的套接字
  */
+ /*
 void IOServerSocketUtil::addFD(const SOCKET& sock){
     FD_SET(sock,&member_structure_.fd_set_);
     ++member_structure_.fd_nums;
 }
+  */
+
 /**
  * @brief 将断开的套接字删除
  *
  * @param sock 断开的套接字
  */
-void IOServerSocketUtil::deleteFD(const SOCKET& sock){
+ /*
+void IOServerSocketUtil::deleteFD(const socket_N& sock){
     FD_CLR(sock,&member_structure_.fd_set_);
     --member_structure_.fd_nums;
 }
+  */
 //#endif
 
 /*ClientSocketUtil*/
@@ -241,7 +253,7 @@ ClientSocketUtil::ClientSocketUtil(const std::string& ip,const unsigned int port
     server_addr_.sin_addr.s_addr= inet_addr(ip.c_str());
     server_addr_.sin_port=htons(port);
 
-    if(connect(clnt_sock_,(SOCKADDR*)&server_addr_,sizeof(server_addr_))==SOCKET_ERROR)
+    if(connect(clnt_sock_,(sockaddr_N*)&server_addr_,sizeof(server_addr_))==SOCKET_ERROR)
         lei_net_error::throwException("util/socket_util.cpp client connect() error!",2);
 }
 ClientSocketUtil::~ClientSocketUtil(){

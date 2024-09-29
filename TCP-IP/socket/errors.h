@@ -3,7 +3,6 @@
 
 #include<iostream>
 
-#include<winsock2.h>
 /* 错误模版,用于为输出错误提供帮助 */
 class Error {
 public:

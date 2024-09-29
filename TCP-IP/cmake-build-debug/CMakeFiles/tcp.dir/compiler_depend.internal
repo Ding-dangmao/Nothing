@@ -414,7 +414,7 @@ CMakeFiles/tcp.dir/main.cpp.obj
  F:/CLion 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypes.h
  F:/CLion 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypesbase.h
  F:/Nothing/TCP-IP/socket/errors.h
- F:/Nothing/TCP-IP/socket/socket_util.h
+ F:/Nothing/TCP-IP/socket/socket_util.hpp
 
 CMakeFiles/tcp.dir/socket/socket_util.cpp.obj
  F:/Nothing/TCP-IP/socket/socket_util.cpp
@@ -817,5 +817,5 @@ CMakeFiles/tcp.dir/socket/socket_util.cpp.obj
  F:/CLion 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypes.h
  F:/CLion 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypesbase.h
  F:/Nothing/TCP-IP/socket/errors.h
- F:/Nothing/TCP-IP/socket/socket_util.h
+ F:/Nothing/TCP-IP/socket/socket_util.hpp
 

@@ -401,7 +401,7 @@ CMakeFiles/test.dir/socket/socket_util.cpp.obj: F:/Nothing/TCP-IP/socket/socket_
   F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypes.h \
   F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypesbase.h \
   F:/Nothing/TCP-IP/socket/errors.h \
-  F:/Nothing/TCP-IP/socket/socket_util.h
+  F:/Nothing/TCP-IP/socket/socket_util.hpp
 
 CMakeFiles/test.dir/test.cpp.obj: F:/Nothing/TCP-IP/test.cpp \
   F:/CLion\ 2023.3.4/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/adxintrin.h \
@@ -803,7 +803,7 @@ CMakeFiles/test.dir/test.cpp.obj: F:/Nothing/TCP-IP/test.cpp \
   F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypes.h \
   F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/wtypesbase.h \
   F:/Nothing/TCP-IP/socket/errors.h \
-  F:/Nothing/TCP-IP/socket/socket_util.h
+  F:/Nothing/TCP-IP/socket/socket_util.hpp
 
 
 F:/CLion\ 2023.3.4/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32/bits/error_constants.h:
@@ -1608,4 +1608,4 @@ F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/winuser.h:
 
 F:/CLion\ 2023.3.4/bin/mingw/x86_64-w64-mingw32/include/winver.h:
 
-F:/Nothing/TCP-IP/socket/socket_util.h:
+F:/Nothing/TCP-IP/socket/socket_util.hpp:
