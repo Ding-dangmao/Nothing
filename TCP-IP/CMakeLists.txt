@@ -9,9 +9,9 @@ endif ()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     add_compile_definitions(Windows=true)
+    link_libraries(ws2_32.lib)
 endif()
 
-link_libraries(ws2_32.lib)
 
 include_directories(error socket)
 

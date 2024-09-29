@@ -17,6 +17,9 @@ using sockaddr_in_N = SOCKADDR_IN;
 using sockaddr_N = SOCKADDR;
 using socklen_t_N = int;
 
+#define SOCKET_ERROR_N SOCKET_ERROR
+#define INVALID_SOCKET_N INVALID_SOCKET
+
 #define SEND_MESSAGE(sock_N,string_N,len_N,flags_N) send(sock_N,string_N.c_str(),len_N,flags_N)
 #define RECEIVE_MESSAGE(sock_N,string_N,len_N,flags_N) recv(sock_N,string_N,len_N,flags_N)
 
@@ -27,12 +30,17 @@ using socklen_t_N = int;
 #include<arpa/inet.h>
 #include<stdlib.h>
 #include<unistd.h>
+
 using socket_N=int;
 using sockaddr_in_N = struct sockaddr_in;
 using sockaddr_N = struct sockaddr;
 using socklen_t_N = socklen_t;
 
+#define SOCKET_ERROR_N -1
+#define INVALID_SOCKET_N -1
 
+#define SEND_MESSAGE(sock_N,string_N,len_N,flags_N) write(sock_N,string_N.c_str(),len_N)
+#define RECEIVE_MESSAGE(sock_N,string_N,len_N,flags_N) read(sock_N,string_N,len_N)
 
 #endif
 

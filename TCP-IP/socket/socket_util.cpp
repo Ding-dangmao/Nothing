@@ -162,7 +162,7 @@ int SocketUtil::receiveAllMessage(const socket_N& sock,char *message){
  * @param {unsigned} port 开放端口值
  */
 ServerSocketUtil::ServerSocketUtil(const unsigned int port): SocketUtil("NULL",port) {
-    if((server_sock_=socket(PF_INET,SOCK_STREAM,0))==INVALID_SOCKET)
+    if((server_sock_=socket(PF_INET,SOCK_STREAM,0))==INVALID_SOCKET_N)
         lei_net_error::throwException("util/socket_util.cpp server socket() create error!",2);
 
     memset(&server_addr_,0,sizeof(server_addr_));
@@ -170,9 +170,9 @@ ServerSocketUtil::ServerSocketUtil(const unsigned int port): SocketUtil("NULL",p
     server_addr_.sin_addr.s_addr=htonl(INADDR_ANY);
     server_addr_.sin_port=htons(port);
 
-    if(bind(server_sock_,(sockaddr_N*)&server_addr_,sizeof(server_addr_))==SOCKET_ERROR)
+    if(bind(server_sock_,(sockaddr_N*)&server_addr_,sizeof(server_addr_))==SOCKET_ERROR_N)
         lei_net_error::throwException("util/socket_util.cpp server bind() create error!",2);
-    if(listen(server_sock_,5)==SOCKET_ERROR)
+    if(listen(server_sock_,5)==SOCKET_ERROR_N)
         lei_net_error::throwException("util/socket_util.cpp server listen() create error!",2);
 
 }
@@ -184,7 +184,7 @@ socket_N ServerSocketUtil::acceptSocket(){
     //待定
     //SOCKET client_sock; b b 
     client_addr_sz=sizeof(client_addr_);
-    if((clnt_sock_=accept(server_sock_,(sockaddr_N*)&client_addr_,&client_addr_sz))==INVALID_SOCKET)
+    if((clnt_sock_=accept(server_sock_,(sockaddr_N*)&client_addr_,&client_addr_sz))==INVALID_SOCKET_N)
         lei_net_error::throwException("util/socket_util.cpp server accept() create error!",2);
 
     sockets_.pushElement(clnt_sock_);
@@ -199,7 +199,11 @@ socket_N ServerSocketUtil::acceptSocket(){
 
 ServerSocketUtil::~ServerSocketUtil(){
     //信息传递套接字需考虑
+#ifdef Windows
     closesocket(server_sock_);
+#else
+    close(server_sock_);
+#endif
 }
 
 
@@ -245,7 +249,7 @@ void IOServerSocketUtil::deleteFD(const socket_N& sock){
  * @param {unsigned} port 目标服务器端口值 默认值为Linux端开放的9190端口
  */
 ClientSocketUtil::ClientSocketUtil(const std::string& ip,const unsigned int port): SocketUtil(ip,port){
-    if((clnt_sock_=socket(PF_INET,SOCK_STREAM,0))==INVALID_SOCKET)
+    if((clnt_sock_=socket(PF_INET,SOCK_STREAM,0))==INVALID_SOCKET_N)
         lei_net_error::throwException("util/socket_util.cpp client socket() create error!",2);
 
     memset(&server_addr_,0,sizeof(server_addr_));
@@ -253,9 +257,13 @@ ClientSocketUtil::ClientSocketUtil(const std::string& ip,const unsigned int port
     server_addr_.sin_addr.s_addr= inet_addr(ip.c_str());
     server_addr_.sin_port=htons(port);
 
-    if(connect(clnt_sock_,(sockaddr_N*)&server_addr_,sizeof(server_addr_))==SOCKET_ERROR)
+    if(connect(clnt_sock_,(sockaddr_N*)&server_addr_,sizeof(server_addr_))==SOCKET_ERROR_N)
         lei_net_error::throwException("util/socket_util.cpp client connect() error!",2);
 }
 ClientSocketUtil::~ClientSocketUtil(){
-    closesocket(clnt_sock_);
+#ifdef Windows
+    closesocket(server_sock_);
+#else
+    close(server_sock_);
+#endif
 }
