@@ -14,10 +14,9 @@ int main() {
     if(WSAStartup(MAKEWORD(2,2),&wsadata));
     {
         ServerSocketUtil s(9190);
-        s.acceptSocket();
-        char x[12213];
-        s.receiveAllMessage(x);
-        std::cout<<x;
+        IOServerSocketUtil i(s);
+        i.argumentSet(5,5000);
+        i.simpleIOMultiplex(said);
     }
     WSACleanup();
     return 0;

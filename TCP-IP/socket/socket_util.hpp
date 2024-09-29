@@ -4,7 +4,8 @@
 #include<iostream>
 #include<algorithm>
 #include<vector>
-
+#include<cmath>
+#include<cstring>
 
 #include<cstdlib>
 
@@ -77,7 +78,7 @@ public:
 
     static void closeSocket(socket_N& sock){
 #ifdef Windows
-        closeSocket(sock);
+        closesocket(sock);
 #else
         close(sock);
 #endif
@@ -159,23 +160,22 @@ public:
 };
 
 //#ifdef IO_MULTIPLEXING
-/*
+
 class IOServerSocketUtil{
 public:
     struct MemberStructure {
-        MemberStructure():fd_nums(0){}
+        MemberStructure():fd_nums(0),fd_num_max(0){}
         fd_set fd_set_;
         fd_set fd_set_cpy;
         timeval timeout;
         long timeout_seconds,timeout_microseconds;
         int fd_nums;
+        int fd_num_max;
     };
 public:
     IOServerSocketUtil()=delete;
     inline explicit IOServerSocketUtil(ServerSocketUtil& server): member_structure_(),server_socket_util_(server){
         FD_ZERO(&member_structure_.fd_set_);
-        //FD_SET(server.server_sock_,&member_structure_.fd_set_);
-        //++member_structure_.fd_nums;
         addFD(server.server_sock_);
     }
     void argumentSet(long timeout_seconds=5,long timeout_microseconds=5000);
@@ -189,7 +189,7 @@ public:
     ServerSocketUtil server_socket_util_;
     MemberStructure member_structure_;
 };
-*/
+
 #ifdef Windows_IOCP
 class IOMultiplexIOCP{
 public:
@@ -219,7 +219,7 @@ public:
  * @param function 可调用形参名
  * @param args 包形参名
  */
- /*
+
 template<class T,class... Args>
 void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
     int return_val;
@@ -231,13 +231,21 @@ void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
         member_structure_.timeout.tv_usec = member_structure_.timeout_microseconds;
 
         fd_set& fdset=member_structure_.fd_set_cpy;
+#ifdef Windows
         if((return_val= select(member_structure_.fd_nums,&fdset,
                                nullptr,nullptr,&member_structure_.timeout))==-1){
             lei_net_error::throwException("select error!",2);
             break;
         }
+#else
+        if((return_val= select(member_structure_.fd_num_max+1,&fdset,
+                               nullptr,nullptr,&member_structure_.timeout))==-1){
+            lei_net_error::throwException("select error!",2);
+            break;
+        }
+#endif
         if(return_val==0){std::puts("timeout");continue;}
-
+#ifdef Windows
         for(int i=0;i<fdset.fd_count;++i){
             if(FD_ISSET(fdset.fd_array[i],&fdset)){
                 socket_N sock=fdset.fd_array[i];
@@ -253,7 +261,8 @@ void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
                     if(len==0){
                         deleteFD(sock);
                         std::puts("close sock");
-                        closesocket(sock);
+                        //closesocket(sock);
+                        SocketUtil::closeSocket(sock);
                     }else{
                         //函数调用
                         function_(message);
@@ -262,7 +271,33 @@ void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
                 }
             }
         }
+#else
+        for(int i=0;i<=member_structure_.fd_num_max;++i){
+            if(FD_ISSET(i,&fdset)){
+                socket_N sock= i;
+                if(sock==server_socket_util_.server_sock_){
+                    socket_N clnt = server_socket_util_.clnt_sock_=server_socket_util_.acceptSocket();
+                    addFD(clnt);
+                    SocketUtil::sendMessage(clnt,"20/receive your message");
+                    std::puts("something in");
+                }
+                else{
+                    char message[DATA_MAX_SIZE];
+                    len = SocketUtil::receiveAllMessage(sock,message);
+                    if(len==0){
+                        deleteFD(sock);
+                        std::puts("close sock");
+                        SocketUtil::closeSocket(sock);
+                    }else{
+                        //函数调用
+                        function_(message);
+                        //std::cout<<message<<'\n';
+                    }
+                }
+            }
+        }
+#endif
     }
 }
-*/
+
 //#endif

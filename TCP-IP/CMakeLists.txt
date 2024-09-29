@@ -13,6 +13,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 endif()
 
 
+link_libraries(ws2_32.lib)
+
 include_directories(error socket)
 
 

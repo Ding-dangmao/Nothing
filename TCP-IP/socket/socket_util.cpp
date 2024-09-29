@@ -210,35 +210,40 @@ ServerSocketUtil::~ServerSocketUtil(){
 
 //#ifdef IO_MULTIPLEXING
 /*IOServerSocketUtil*/
-/*
+
 void IOServerSocketUtil::argumentSet(long timeout_seconds,long timeout_microseconds){
     member_structure_.timeout_seconds=timeout_seconds;
     member_structure_.timeout_microseconds=timeout_microseconds;
 }
- */
+
 /**
  *  @brief  将新建立连接的套接字注册
  *
  * @param sock  新连接的套接字
  */
- /*
-void IOServerSocketUtil::addFD(const SOCKET& sock){
+void IOServerSocketUtil::addFD(const socket_N& sock){
     FD_SET(sock,&member_structure_.fd_set_);
     ++member_structure_.fd_nums;
+#ifdef Linux
+    member_structure_.fd_num_max=std::max(sock,member_structure_.fd_num_max);
+#endif
 }
-  */
+
 
 /**
  * @brief 将断开的套接字删除
  *
  * @param sock 断开的套接字
  */
- /*
+
 void IOServerSocketUtil::deleteFD(const socket_N& sock){
     FD_CLR(sock,&member_structure_.fd_set_);
     --member_structure_.fd_nums;
+#ifdef Linux
+    member_structure_.fd_num_max=std::max(sock,member_structure_.fd_num_max);
+#endif
 }
-  */
+
 //#endif
 
 /*ClientSocketUtil*/
@@ -262,8 +267,8 @@ ClientSocketUtil::ClientSocketUtil(const std::string& ip,const unsigned int port
 }
 ClientSocketUtil::~ClientSocketUtil(){
 #ifdef Windows
-    closesocket(server_sock_);
+    closesocket(clnt_sock_);
 #else
-    close(server_sock_);
+    close(clnt_sock_);
 #endif
 }

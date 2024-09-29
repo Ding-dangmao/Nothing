@@ -30,13 +30,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 21,
+				"line" : 23,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 19,
+				"line" : 21,
 				"parent" : 0
 			},
 			{
@@ -48,7 +48,7 @@
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 16,
+				"line" : 18,
 				"parent" : 0
 			}
 		]
@@ -113,6 +113,11 @@
 				"backtrace" : 2,
 				"fragment" : "-LF:\\Nothing\\TCP-IP\\.",
 				"role" : "libraryPath"
+			},
+			{
+				"backtrace" : 1,
+				"fragment" : "-lws2_32",
+				"role" : "libraries"
 			},
 			{
 				"backtrace" : 1,
