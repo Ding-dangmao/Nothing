@@ -41,45 +41,74 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = F$:/Nothing/TCP-IP/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target Nothing
+# Object build statements for EXECUTABLE target tcp
 
 
 #############################################
-# Order-only phony target for Nothing
+# Order-only phony target for tcp
 
-build cmake_object_order_depends_target_Nothing: phony || CMakeFiles/Nothing.dir
+build cmake_object_order_depends_target_tcp: phony || CMakeFiles/tcp.dir
 
-build CMakeFiles/Nothing.dir/main.cpp.obj: CXX_COMPILER__Nothing_unscanned_Debug F$:/Nothing/TCP-IP/main.cpp || cmake_object_order_depends_target_Nothing
-  DEP_FILE = CMakeFiles\Nothing.dir\main.cpp.obj.d
+build CMakeFiles/tcp.dir/main.cpp.obj: CXX_COMPILER__tcp_unscanned_Debug F$:/Nothing/TCP-IP/main.cpp || cmake_object_order_depends_target_tcp
+  DEP_FILE = CMakeFiles\tcp.dir\main.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   INCLUDES = -IF:/Nothing/TCP-IP/error -IF:/Nothing/TCP-IP/socket
-  OBJECT_DIR = CMakeFiles\Nothing.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nothing.dir
-
-build CMakeFiles/Nothing.dir/socket/socket_util.cpp.obj: CXX_COMPILER__Nothing_unscanned_Debug F$:/Nothing/TCP-IP/socket/socket_util.cpp || cmake_object_order_depends_target_Nothing
-  DEP_FILE = CMakeFiles\Nothing.dir\socket\socket_util.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  INCLUDES = -IF:/Nothing/TCP-IP/error -IF:/Nothing/TCP-IP/socket
-  OBJECT_DIR = CMakeFiles\Nothing.dir
-  OBJECT_FILE_DIR = CMakeFiles\Nothing.dir\socket
+  OBJECT_DIR = CMakeFiles\tcp.dir
+  OBJECT_FILE_DIR = CMakeFiles\tcp.dir
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target Nothing
+# Link build statements for EXECUTABLE target tcp
 
 
 #############################################
-# Link the executable Nothing.exe
+# Link the executable tcp.exe
 
-build Nothing.exe: CXX_EXECUTABLE_LINKER__Nothing_Debug CMakeFiles/Nothing.dir/main.cpp.obj CMakeFiles/Nothing.dir/socket/socket_util.cpp.obj
+build tcp.exe: CXX_EXECUTABLE_LINKER__tcp_Debug CMakeFiles/tcp.dir/main.cpp.obj
   FLAGS = -g
-  LINK_LIBRARIES = -lws2_32  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
-  OBJECT_DIR = CMakeFiles\Nothing.dir
+  LINK_LIBRARIES = -lws2_32  -lsock_helper  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_PATH = -LF:/Nothing/TCP-IP/.
+  OBJECT_DIR = CMakeFiles\tcp.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
-  TARGET_FILE = Nothing.exe
-  TARGET_IMPLIB = libNothing.dll.a
-  TARGET_PDB = Nothing.exe.dbg
+  TARGET_FILE = tcp.exe
+  TARGET_IMPLIB = libtcp.dll.a
+  TARGET_PDB = tcp.exe.dbg
+
+# =============================================================================
+# Object build statements for EXECUTABLE target test
+
+
+#############################################
+# Order-only phony target for test
+
+build cmake_object_order_depends_target_test: phony || CMakeFiles/test.dir
+
+build CMakeFiles/test.dir/test.cpp.obj: CXX_COMPILER__test_unscanned_Debug F$:/Nothing/TCP-IP/test.cpp || cmake_object_order_depends_target_test
+  DEP_FILE = CMakeFiles\test.dir\test.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  INCLUDES = -IF:/Nothing/TCP-IP/error -IF:/Nothing/TCP-IP/socket
+  OBJECT_DIR = CMakeFiles\test.dir
+  OBJECT_FILE_DIR = CMakeFiles\test.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target test
+
+
+#############################################
+# Link the executable test.exe
+
+build test.exe: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/test.cpp.obj
+  FLAGS = -g
+  LINK_LIBRARIES = -lws2_32  -lsock_helper  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_PATH = -LF:/Nothing/TCP-IP/.
+  OBJECT_DIR = CMakeFiles\test.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_FILE = test.exe
+  TARGET_IMPLIB = libtest.dll.a
+  TARGET_PDB = test.exe.dbg
 
 
 #############################################
@@ -107,7 +136,9 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
-build Nothing: phony Nothing.exe
+build tcp: phony tcp.exe
+
+build test: phony test.exe
 
 # =============================================================================
 # Folder targets.
@@ -117,7 +148,7 @@ build Nothing: phony Nothing.exe
 #############################################
 # Folder: F:/Nothing/TCP-IP/cmake-build-debug
 
-build all: phony Nothing.exe
+build all: phony tcp.exe test.exe
 
 # =============================================================================
 # Built-in targets

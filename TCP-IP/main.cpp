@@ -1,7 +1,7 @@
 #include <iostream>
 #include<functional>
 
-#include"socket_util.h"
+#include"socket_util.hpp"
 
 
 void said(std::string x){
@@ -12,11 +12,12 @@ void said(std::string x){
 int main() {
     WSADATA wsadata;
     if(WSAStartup(MAKEWORD(2,2),&wsadata));
-    ServerSocketUtil s(9190);
-    //IOServerSocketUtil w(s);
-    //w.simpleIOMultiplex(said);
-    s.acceptSocket();
-
+    {
+        ServerSocketUtil s(9190);
+        IOServerSocketUtil i(s);
+        i.argumentSet(5,5000);
+        i.simpleIOMultiplex(said);
+    }
     WSACleanup();
     return 0;
 }
