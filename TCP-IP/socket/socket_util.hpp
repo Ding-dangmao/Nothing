@@ -190,14 +190,39 @@ public:
     MemberStructure member_structure_;
 };
 
-#ifdef Windows_IOCP
-class IOMultiplexIOCP{
+#ifdef Windows
+#define WSA_MAXIMUM_SOCKETS 110
+#define WSA_MAXIMUM_EVENTS 110
+class AsyncNotifyIO{
 public:
+    AsyncNotifyIO()=delete;
+    explicit inline AsyncNotifyIO(ServerSocketUtil& server): member_structure_(), server_socket_util_(server){
+        member_structure_.new_event_=WSACreateEvent();
+        if(WSAEventSelect(server_socket_util_.server_sock_,member_structure_.new_event_,FD_ACCEPT)==SOCKET_ERROR_N)
+            lei_net_error::throwException("socket_util.hpp AsyncNotifyIO initialize error",2);
+        member_structure_.socket_set_[member_structure_.socket_nums_]=server_socket_util_.server_sock_;
+        member_structure_.event_set_[member_structure_.socket_nums_]=member_structure_.new_event_;
+        ++member_structure_.socket_nums_;
+    }
+    struct MemberStructure {
+        inline MemberStructure():socket_nums_(0){}
+        socket_N socket_set_[WSA_MAXIMUM_SOCKETS]{};
+        WSAEVENT event_set_[WSA_MAXIMUM_EVENTS];
+        WSAEVENT new_event_;
+        WSANETWORKEVENTS net_work_events_;
+        int socket_nums_;
+    };
 
+    template<typename T,typename ... Arg>
+    bool operator()(T,Arg...);
+
+    ServerSocketUtil server_socket_util_;
+    MemberStructure member_structure_;
 };
 #endif
 
-#ifdef Linux_EPOLL
+
+#ifdef Linux
 class IOMultiplexEPOLL{
 public:
 
@@ -208,8 +233,6 @@ public:
 
 
 #endif //LEI_NET_SOCKET_UTIL_H
-
-//#ifdef IO_MULTIPLEXING
 
 /**
  * @brief 进入IO复用模式,传递可调用数据与其参数,用以处理接收到的消息。新连接建立: something int,连接断开: close sock,设置的单次超时时间到达: timeout。
@@ -300,4 +323,77 @@ void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
     }
 }
 
-//#endif
+#ifdef Windows
+template<typename T,typename... Arg>
+bool AsyncNotifyIO::operator()(T F,Arg...) {
+    unsigned long long return_id;
+    unsigned long long start_id;
+
+    socket_N* socket_set=member_structure_.socket_set_;
+    WSAEVENT* event_set=member_structure_.event_set_;
+    WSAEVENT& new_event=member_structure_.new_event_;
+    WSANETWORKEVENTS& net_work_event=member_structure_.net_work_events_;
+    int& socket_nums=member_structure_.socket_nums_;
+    while(1){
+        return_id= WSAWaitForMultipleEvents(socket_nums,event_set,
+                                            FALSE,WSA_INFINITE,
+                                            FALSE);
+        start_id=return_id-WSA_WAIT_EVENT_0;
+
+        for(unsigned long long i=start_id;i<socket_nums;i++){
+            unsigned long long single_id= WSAWaitForMultipleEvents(1,&event_set[i],
+                                                                   FALSE,0,
+                                                                   FALSE);
+            if(single_id==WSA_WAIT_FAILED || single_id==WSA_WAIT_TIMEOUT)
+                continue;
+            else{
+                single_id=i;
+                WSAEnumNetworkEvents(socket_set[single_id],event_set[single_id],
+                                     &net_work_event);
+                if(net_work_event.lNetworkEvents & FD_ACCEPT){
+                    if(net_work_event.iErrorCode[FD_ACCEPT_BIT]!=0)
+                    {
+                        lei_net_error::throwException("socket_util AsyncNotifyIO Accept error");
+                    }
+                    server_socket_util_.clnt_sock_=server_socket_util_.acceptSocket();
+                    new_event= WSACreateEvent();
+                    WSAEventSelect(server_socket_util_.clnt_sock_,new_event,
+                                   FD_READ);
+
+                    event_set[socket_nums]=new_event;
+                    socket_set[socket_nums]=server_socket_util_.clnt_sock_;
+                    socket_nums++;
+                    SocketUtil::sendMessage(server_socket_util_.clnt_sock_,"20/receive your message");
+                    std::puts("connected new client");
+                }
+
+                if(net_work_event.lNetworkEvents & FD_READ){
+                    if(net_work_event.iErrorCode[FD_READ_BIT]!=0){
+                        lei_net_error::throwException("socket_util.hpp AsyncNotifyIO READ error",2);
+                    }
+                    char message[DATA_MAX_SIZE];
+                    //函数处理
+                    SocketUtil::receiveAllMessage(socket_set[single_id],message);
+                    F(message);
+                }
+
+                if(net_work_event.lNetworkEvents & FD_CLOSE){
+                    std::puts("close socket");
+                    if(net_work_event.iErrorCode[FD_CLOSE_BIT]!=0){
+                        lei_net_error::throwException("socket_util.hpp AsyncNotifyIO CLOSE error",2);
+                    }
+                    WSACloseEvent(event_set[single_id]);
+                    SocketUtil::closeSocket(socket_set[single_id]);
+
+                    //除去
+                    socket_nums--;
+                    std::swap(event_set[single_id],event_set[socket_nums]);
+                    std::swap(socket_set[single_id],socket_set[socket_nums]);
+
+                }
+            }
+        }
+    }
+}
+
+#endif

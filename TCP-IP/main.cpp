@@ -14,9 +14,11 @@ int main() {
     if(WSAStartup(MAKEWORD(2,2),&wsadata));
     {
         ServerSocketUtil s(9190);
-        IOServerSocketUtil i(s);
-        i.argumentSet(5,5000);
-        i.simpleIOMultiplex(said);
+        //IOServerSocketUtil i(s);
+        //i.argumentSet(5,5000);
+        //i.simpleIOMultiplex(said);
+        AsyncNotifyIO i(s);
+        i(said);
     }
     WSACleanup();
     return 0;
