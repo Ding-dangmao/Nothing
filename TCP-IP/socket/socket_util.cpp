@@ -38,8 +38,6 @@ int SocketUtil::sendMessage(const socket_N& sock,const std::string& message) {
 int SocketUtil::receiveMessage(char* message)const {
     //int len = recv(clnt_sock_, message, DATA_MAX_SIZE,0);
     int len= RECEIVE_MESSAGE(clnt_sock_,message,DATA_MAX_SIZE-1,0);
-    if(len==-1)
-        lei_net_error::throwException("socket/socket_util recv error!",2);
     return len;
 }
 /**
@@ -86,7 +84,13 @@ int SocketUtil::receiveAllMessage(char* message)const{
         int val=receiveMessage(length_char, 1, left);
         if(val==0)return 0;
         if(val==-1){
+#ifdef Linux
+            if(errno==EAGAIN)return -1;
+#endif
+#ifdef Windows
             lei_net_error::throwException("util/socket/socket_util.cpp socket error , check close sock",1);
+#endif
+
         }
         left++;
         if (length_char[left - 1] == '/')break;
@@ -128,7 +132,13 @@ int SocketUtil::receiveAllMessage(const socket_N& sock,char *message){
         //std::cout<<val<<std::endl;
         if(val==0)return 0;
         if(val==-1){
-            lei_net_error::throwException("util/socket/socket_util.cpp socket error : check close sock",2);
+#ifdef Linux
+            if(errno==EAGAIN)return -1;
+#endif
+#ifdef Windows
+            lei_net_error::throwException("util/socket/socket_util.cpp socket error , check close sock",1);
+#endif
+
         }
         left++;
         if (length_char[left - 1] == '/')break;

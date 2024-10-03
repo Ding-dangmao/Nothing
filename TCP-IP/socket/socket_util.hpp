@@ -25,12 +25,15 @@ using socklen_t_N = int;
 #define RECEIVE_MESSAGE(sock_N,string_N,len_N,flags_N) recv(sock_N,string_N,len_N,flags_N)
 
 #endif
-
+//记得删
 #ifdef Linux
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<stdlib.h>
 #include<unistd.h>
+
+#include<sys/epoll.h>
+#include<fcntl.h>
 
 using socket_N=int;
 using sockaddr_in_N = struct sockaddr_in;
@@ -223,9 +226,36 @@ public:
 
 
 #ifdef Linux
+#define EPOLL_SIZE 66
 class IOMultiplexEPOLL{
 public:
+    IOMultiplexEPOLL()=delete;
+    IOMultiplexEPOLL(ServerSocketUtil& server,bool type):server_socket_util_(server){
+        type_=static_cast<Type>(type);
+        member_structure_.epoll_routine_=epoll_create(EPOLL_SIZE);
+        member_structure_.epoll_events_=new struct epoll_event[EPOLL_SIZE];
 
+        member_structure_.new_event_.events=EPOLLIN;
+        member_structure_.new_event_.data.fd=server_socket_util_.server_sock_;
+        epoll_ctl(member_structure_.epoll_routine_,EPOLL_CTL_ADD,
+                  server_socket_util_.server_sock_,&member_structure_.new_event_);
+    }
+    enum class Type:bool{LT,ET};
+
+    struct MemberStructure{
+        MemberStructure():epoll_routine_(0),event_nums(0){}
+         struct epoll_event* epoll_events_;
+         struct epoll_event new_event_;
+         int epoll_routine_;
+         int event_nums;
+    };
+
+    template<class T,class... Arg>
+    bool operator()(T,Arg...);
+
+    ServerSocketUtil server_socket_util_;
+    MemberStructure member_structure_;
+    Type type_;
 };
 #endif
 
@@ -335,6 +365,7 @@ bool AsyncNotifyIO::operator()(T F,Arg...) {
     WSANETWORKEVENTS& net_work_event=member_structure_.net_work_events_;
     int& socket_nums=member_structure_.socket_nums_;
     while(1){
+        //std::cout<<socket_nums<<std::endl;
         return_id= WSAWaitForMultipleEvents(socket_nums,event_set,
                                             FALSE,WSA_INFINITE,
                                             FALSE);
@@ -373,10 +404,12 @@ bool AsyncNotifyIO::operator()(T F,Arg...) {
                     }
                     char message[DATA_MAX_SIZE];
                     //函数处理
-                    SocketUtil::receiveAllMessage(socket_set[single_id],message);
-                    F(message);
+                    int len=SocketUtil::receiveAllMessage(socket_set[single_id],message);
+                    if(len==0)puts("close socket");
+                    else
+                        F(message);
                 }
-
+                //有问题,断开时触发不了,不了解原因,无疑会导致循环时造成的时间损失
                 if(net_work_event.lNetworkEvents & FD_CLOSE){
                     std::puts("close socket");
                     if(net_work_event.iErrorCode[FD_CLOSE_BIT]!=0){
@@ -395,5 +428,79 @@ bool AsyncNotifyIO::operator()(T F,Arg...) {
         }
     }
 }
+
+#endif
+
+#ifdef Linux
+
+template<class T,class... Args>
+bool IOMultiplexEPOLL::operator()(T fun,Args... args){
+    int return_val;
+    int sock;
+    struct epoll_event* epoll_events=member_structure_.epoll_events_;
+    struct epoll_event& new_event=member_structure_.new_event_;
+    int& epoll_routine=member_structure_.epoll_routine_;
+    int& event_nums=member_structure_.event_nums;
+    while(1){
+        return_val=epoll_wait(epoll_routine,epoll_events,
+                              EPOLL_SIZE,-1);
+        if(return_val==-1){
+            lei_net_error::throwException("socket_util.hpp IOMultiplexEPOLL error: return_val==-1");
+        }
+        event_nums=return_val;
+        for(int i=0;i<event_nums;i++){
+            if(epoll_events[i].data.fd==server_socket_util_.server_sock_){
+                server_socket_util_.acceptSocket();
+                new_event.events=EPOLLIN;
+                new_event.data.fd=server_socket_util_.clnt_sock_;
+                if(type_==Type::ET){
+                    new_event.events|=EPOLLET;
+                    int flag=fcntl(server_socket_util_.clnt_sock_,F_GETFL,0);
+                    fcntl(server_socket_util_.clnt_sock_,F_SETFL,flag|O_NONBLOCK);
+                }
+                epoll_ctl(epoll_routine,EPOLL_CTL_ADD,
+                          server_socket_util_.clnt_sock_,&new_event);
+                SocketUtil::sendMessage(server_socket_util_.clnt_sock_,"31/receive your connected request!");
+                std::puts("new client connected");
+            }
+            else{
+                char message[DATA_MAX_SIZE];
+                int len{};
+                sock=epoll_events[i].data.fd;
+                if(type_==Type::LT){
+                    std::puts("LT mode!");
+                    len=SocketUtil::receiveAllMessage(sock,message);
+                    if(len==0){
+                        epoll_ctl(epoll_routine,EPOLL_CTL_DEL,sock,NULL);
+                     SocketUtil::closeSocket(sock);
+                     std::puts("close socket!");
+                    }else{
+                        fun(message);
+                    }
+                }else if(type_==Type::ET){
+                    std::puts("ET mode!");
+                    while(1){
+                        len=SocketUtil::receiveAllMessage(sock,message);
+                        if(len==0){
+                            epoll_ctl(epoll_routine,EPOLL_CTL_DEL,sock,NULL);
+                            SocketUtil::closeSocket(sock);
+                            std::puts("close socket!");
+                            break;
+                        }else if(len<0){
+                            if(errno==EAGAIN)
+                                break;
+                        }else{
+                            fun(message);
+                        }
+                    }
+                }else{
+                    lei_net_error::throwException("socket_util.hpp IOMultiplexEPOLL error: invalid epoll mode");
+                }
+            }
+        }
+    }
+}
+
+
 
 #endif
