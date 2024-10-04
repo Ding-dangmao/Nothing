@@ -25,12 +25,15 @@ using socklen_t_N = int;
 #define RECEIVE_MESSAGE(sock_N,string_N,len_N,flags_N) recv(sock_N,string_N,len_N,flags_N)
 
 #endif
-
+//记得删
 #ifdef Linux
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<stdlib.h>
 #include<unistd.h>
+
+#include<sys/epoll.h>
+#include<fcntl.h>
 
 using socket_N=int;
 using sockaddr_in_N = struct sockaddr_in;
@@ -190,17 +193,69 @@ public:
     MemberStructure member_structure_;
 };
 
-#ifdef Windows_IOCP
-class IOMultiplexIOCP{
+#ifdef Windows
+#define WSA_MAXIMUM_SOCKETS 110
+#define WSA_MAXIMUM_EVENTS 110
+class AsyncNotifyIO{
 public:
+    AsyncNotifyIO()=delete;
+    explicit inline AsyncNotifyIO(ServerSocketUtil& server): member_structure_(), server_socket_util_(server){
+        member_structure_.new_event_=WSACreateEvent();
+        if(WSAEventSelect(server_socket_util_.server_sock_,member_structure_.new_event_,FD_ACCEPT)==SOCKET_ERROR_N)
+            lei_net_error::throwException("socket_util.hpp AsyncNotifyIO initialize error",2);
+        member_structure_.socket_set_[member_structure_.socket_nums_]=server_socket_util_.server_sock_;
+        member_structure_.event_set_[member_structure_.socket_nums_]=member_structure_.new_event_;
+        ++member_structure_.socket_nums_;
+    }
+    struct MemberStructure {
+        inline MemberStructure():socket_nums_(0){}
+        socket_N socket_set_[WSA_MAXIMUM_SOCKETS]{};
+        WSAEVENT event_set_[WSA_MAXIMUM_EVENTS];
+        WSAEVENT new_event_;
+        WSANETWORKEVENTS net_work_events_;
+        int socket_nums_;
+    };
 
+    template<typename T,typename ... Arg>
+    bool operator()(T,Arg...);
+
+    ServerSocketUtil server_socket_util_;
+    MemberStructure member_structure_;
 };
 #endif
 
-#ifdef Linux_EPOLL
+
+#ifdef Linux
+#define EPOLL_SIZE 66
 class IOMultiplexEPOLL{
 public:
+    IOMultiplexEPOLL()=delete;
+    IOMultiplexEPOLL(ServerSocketUtil& server,bool type):server_socket_util_(server){
+        type_=static_cast<Type>(type);
+        member_structure_.epoll_routine_=epoll_create(EPOLL_SIZE);
+        member_structure_.epoll_events_=new struct epoll_event[EPOLL_SIZE];
 
+        member_structure_.new_event_.events=EPOLLIN;
+        member_structure_.new_event_.data.fd=server_socket_util_.server_sock_;
+        epoll_ctl(member_structure_.epoll_routine_,EPOLL_CTL_ADD,
+                  server_socket_util_.server_sock_,&member_structure_.new_event_);
+    }
+    enum class Type:bool{LT,ET};
+
+    struct MemberStructure{
+        MemberStructure():epoll_routine_(0),event_nums(0){}
+         struct epoll_event* epoll_events_;
+         struct epoll_event new_event_;
+         int epoll_routine_;
+         int event_nums;
+    };
+
+    template<class T,class... Arg>
+    bool operator()(T,Arg...);
+
+    ServerSocketUtil server_socket_util_;
+    MemberStructure member_structure_;
+    Type type_;
 };
 #endif
 
@@ -208,8 +263,6 @@ public:
 
 
 #endif //LEI_NET_SOCKET_UTIL_H
-
-//#ifdef IO_MULTIPLEXING
 
 /**
  * @brief 进入IO复用模式,传递可调用数据与其参数,用以处理接收到的消息。新连接建立: something int,连接断开: close sock,设置的单次超时时间到达: timeout。
@@ -300,4 +353,154 @@ void IOServerSocketUtil::simpleIOMultiplex(T function_,Args... args){
     }
 }
 
-//#endif
+#ifdef Windows
+template<typename T,typename... Arg>
+bool AsyncNotifyIO::operator()(T F,Arg...) {
+    unsigned long long return_id;
+    unsigned long long start_id;
+
+    socket_N* socket_set=member_structure_.socket_set_;
+    WSAEVENT* event_set=member_structure_.event_set_;
+    WSAEVENT& new_event=member_structure_.new_event_;
+    WSANETWORKEVENTS& net_work_event=member_structure_.net_work_events_;
+    int& socket_nums=member_structure_.socket_nums_;
+    while(1){
+        //std::cout<<socket_nums<<std::endl;
+        return_id= WSAWaitForMultipleEvents(socket_nums,event_set,
+                                            FALSE,WSA_INFINITE,
+                                            FALSE);
+        start_id=return_id-WSA_WAIT_EVENT_0;
+
+        for(unsigned long long i=start_id;i<socket_nums;i++){
+            unsigned long long single_id= WSAWaitForMultipleEvents(1,&event_set[i],
+                                                                   FALSE,0,
+                                                                   FALSE);
+            if(single_id==WSA_WAIT_FAILED || single_id==WSA_WAIT_TIMEOUT)
+                continue;
+            else{
+                single_id=i;
+                WSAEnumNetworkEvents(socket_set[single_id],event_set[single_id],
+                                     &net_work_event);
+                if(net_work_event.lNetworkEvents & FD_ACCEPT){
+                    if(net_work_event.iErrorCode[FD_ACCEPT_BIT]!=0)
+                    {
+                        lei_net_error::throwException("socket_util AsyncNotifyIO Accept error");
+                    }
+                    server_socket_util_.clnt_sock_=server_socket_util_.acceptSocket();
+                    new_event= WSACreateEvent();
+                    WSAEventSelect(server_socket_util_.clnt_sock_,new_event,
+                                   FD_READ);
+
+                    event_set[socket_nums]=new_event;
+                    socket_set[socket_nums]=server_socket_util_.clnt_sock_;
+                    socket_nums++;
+                    SocketUtil::sendMessage(server_socket_util_.clnt_sock_,"20/receive your message");
+                    std::puts("connected new client");
+                }
+
+                if(net_work_event.lNetworkEvents & FD_READ){
+                    if(net_work_event.iErrorCode[FD_READ_BIT]!=0){
+                        lei_net_error::throwException("socket_util.hpp AsyncNotifyIO READ error",2);
+                    }
+                    char message[DATA_MAX_SIZE];
+                    //函数处理
+                    int len=SocketUtil::receiveAllMessage(socket_set[single_id],message);
+                    if(len==0)puts("close socket");
+                    else
+                        F(message);
+                }
+                //有问题,断开时触发不了,不了解原因,无疑会导致循环时造成的时间损失
+                if(net_work_event.lNetworkEvents & FD_CLOSE){
+                    std::puts("close socket");
+                    if(net_work_event.iErrorCode[FD_CLOSE_BIT]!=0){
+                        lei_net_error::throwException("socket_util.hpp AsyncNotifyIO CLOSE error",2);
+                    }
+                    WSACloseEvent(event_set[single_id]);
+                    SocketUtil::closeSocket(socket_set[single_id]);
+
+                    //除去
+                    socket_nums--;
+                    std::swap(event_set[single_id],event_set[socket_nums]);
+                    std::swap(socket_set[single_id],socket_set[socket_nums]);
+
+                }
+            }
+        }
+    }
+}
+
+#endif
+
+#ifdef Linux
+
+template<class T,class... Args>
+bool IOMultiplexEPOLL::operator()(T fun,Args... args){
+    int return_val;
+    int sock;
+    struct epoll_event* epoll_events=member_structure_.epoll_events_;
+    struct epoll_event& new_event=member_structure_.new_event_;
+    int& epoll_routine=member_structure_.epoll_routine_;
+    int& event_nums=member_structure_.event_nums;
+    while(1){
+        return_val=epoll_wait(epoll_routine,epoll_events,
+                              EPOLL_SIZE,-1);
+        if(return_val==-1){
+            lei_net_error::throwException("socket_util.hpp IOMultiplexEPOLL error: return_val==-1");
+        }
+        event_nums=return_val;
+        for(int i=0;i<event_nums;i++){
+            if(epoll_events[i].data.fd==server_socket_util_.server_sock_){
+                server_socket_util_.acceptSocket();
+                new_event.events=EPOLLIN;
+                new_event.data.fd=server_socket_util_.clnt_sock_;
+                if(type_==Type::ET){
+                    new_event.events|=EPOLLET;
+                    int flag=fcntl(server_socket_util_.clnt_sock_,F_GETFL,0);
+                    fcntl(server_socket_util_.clnt_sock_,F_SETFL,flag|O_NONBLOCK);
+                }
+                epoll_ctl(epoll_routine,EPOLL_CTL_ADD,
+                          server_socket_util_.clnt_sock_,&new_event);
+                SocketUtil::sendMessage(server_socket_util_.clnt_sock_,"31/receive your connected request!");
+                std::puts("new client connected");
+            }
+            else{
+                char message[DATA_MAX_SIZE];
+                int len{};
+                sock=epoll_events[i].data.fd;
+                if(type_==Type::LT){
+                    std::puts("LT mode!");
+                    len=SocketUtil::receiveAllMessage(sock,message);
+                    if(len==0){
+                        epoll_ctl(epoll_routine,EPOLL_CTL_DEL,sock,NULL);
+                     SocketUtil::closeSocket(sock);
+                     std::puts("close socket!");
+                    }else{
+                        fun(message);
+                    }
+                }else if(type_==Type::ET){
+                    std::puts("ET mode!");
+                    while(1){
+                        len=SocketUtil::receiveAllMessage(sock,message);
+                        if(len==0){
+                            epoll_ctl(epoll_routine,EPOLL_CTL_DEL,sock,NULL);
+                            SocketUtil::closeSocket(sock);
+                            std::puts("close socket!");
+                            break;
+                        }else if(len<0){
+                            if(errno==EAGAIN)
+                                break;
+                        }else{
+                            fun(message);
+                        }
+                    }
+                }else{
+                    lei_net_error::throwException("socket_util.hpp IOMultiplexEPOLL error: invalid epoll mode");
+                }
+            }
+        }
+    }
+}
+
+
+
+#endif
