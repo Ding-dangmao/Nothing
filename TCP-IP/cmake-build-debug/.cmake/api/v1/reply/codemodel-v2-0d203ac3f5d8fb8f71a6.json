@@ -16,7 +16,8 @@
 					"targetIndexes" : 
 					[
 						0,
-						1
+						1,
+						2
 					]
 				}
 			],
@@ -32,7 +33,8 @@
 					"targetIndexes" : 
 					[
 						0,
-						1
+						1,
+						2
 					]
 				}
 			],
@@ -41,15 +43,22 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "tcp::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-tcp-Debug-2a3ca4ceb256f8e5add9.json",
+					"jsonFile" : "target-tcp-Debug-6bb7acca3ce8ecc10d52.json",
 					"name" : "tcp",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "test::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-test-Debug-21c2d18e542a54d62edf.json",
+					"jsonFile" : "target-test-Debug-841c93262e035a7ee677.json",
 					"name" : "test",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "tt::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-tt-Debug-d14cfc26978b3a95c682.json",
+					"name" : "tt",
 					"projectIndex" : 0
 				}
 			]

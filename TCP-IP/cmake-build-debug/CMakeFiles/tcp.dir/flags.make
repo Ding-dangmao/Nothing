@@ -6,5 +6,5 @@ CXX_DEFINES = -DWindows=true
 
 CXX_INCLUDES = @CMakeFiles/tcp.dir/includes_CXX.rsp
 
-CXX_FLAGS = -g -fdiagnostics-color=always
+CXX_FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
 

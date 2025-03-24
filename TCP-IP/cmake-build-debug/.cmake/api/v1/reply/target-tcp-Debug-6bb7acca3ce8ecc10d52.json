@@ -59,7 +59,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -fdiagnostics-color=always"
+					"fragment" : "-g -std=gnu++23 -fdiagnostics-color=always"
 				}
 			],
 			"defines" : 
@@ -87,7 +87,7 @@
 				[
 					1
 				],
-				"standard" : "17"
+				"standard" : "23"
 			},
 			"sourceIndexes" : 
 			[

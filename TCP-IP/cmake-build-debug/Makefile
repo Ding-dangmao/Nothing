@@ -141,6 +141,19 @@ test/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/build
 .PHONY : test/fast
 
+#=============================================================================
+# Target rules for targets named tt
+
+# Build rule for target.
+tt: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Makefile2 tt
+.PHONY : tt
+
+# fast build rule for target.
+tt/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tt.dir\build.make CMakeFiles/tt.dir/build
+.PHONY : tt/fast
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -216,6 +229,30 @@ test.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\test.dir\build.make CMakeFiles/test.dir/test.cpp.s
 .PHONY : test.cpp.s
 
+tt.obj: tt.cpp.obj
+.PHONY : tt.obj
+
+# target to build an object file
+tt.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tt.dir\build.make CMakeFiles/tt.dir/tt.cpp.obj
+.PHONY : tt.cpp.obj
+
+tt.i: tt.cpp.i
+.PHONY : tt.i
+
+# target to preprocess a source file
+tt.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tt.dir\build.make CMakeFiles/tt.dir/tt.cpp.i
+.PHONY : tt.cpp.i
+
+tt.s: tt.cpp.s
+.PHONY : tt.s
+
+# target to generate assembly for a file
+tt.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\tt.dir\build.make CMakeFiles/tt.dir/tt.cpp.s
+.PHONY : tt.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -226,6 +263,7 @@ help:
 	@echo ... rebuild_cache
 	@echo ... tcp
 	@echo ... test
+	@echo ... tt
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
@@ -235,6 +273,9 @@ help:
 	@echo ... test.obj
 	@echo ... test.i
 	@echo ... test.s
+	@echo ... tt.obj
+	@echo ... tt.i
+	@echo ... tt.s
 .PHONY : help
 
 

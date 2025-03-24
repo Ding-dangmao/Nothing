@@ -4,7 +4,7 @@
 # compile CXX with F:/CLion 2023.3.4/bin/mingw/bin/g++.exe
 CXX_DEFINES = -DWindows=true
 
-CXX_INCLUDES = @CMakeFiles/test.dir/includes_CXX.rsp
+CXX_INCLUDES = @CMakeFiles/tt.dir/includes_CXX.rsp
 
 CXX_FLAGS = -g -std=gnu++23 -fdiagnostics-color=always
 

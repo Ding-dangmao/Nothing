@@ -117,6 +117,56 @@
 					<DistClean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
+			<Target title="tt">
+				<Option output="F:/Nothing/TCP-IP/cmake-build-debug/tt.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="F:/Nothing/TCP-IP/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DWindows=true"/>
+					<Add directory="F:/Nothing/TCP-IP/error"/>
+					<Add directory="F:/Nothing/TCP-IP/socket"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../include"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 tt"/>
+					<CompileFile command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="tt/fast">
+				<Option output="F:/Nothing/TCP-IP/cmake-build-debug/tt.exe" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="F:/Nothing/TCP-IP/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add option="-DWindows=true"/>
+					<Add directory="F:/Nothing/TCP-IP/error"/>
+					<Add directory="F:/Nothing/TCP-IP/socket"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../include"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/include-fixed"/>
+					<Add directory="F:/CLion 2023.3.4/bin/mingw/bin/../lib/gcc/x86_64-w64-mingw32/13.1.0/../../../../x86_64-w64-mingw32/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 tt/fast"/>
+					<CompileFile command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="F:/CLion 2023.3.4/bin/mingw/bin/mingw32-make.exe -f &quot;F:/Nothing/TCP-IP/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
 			<Target title="edit_cache">
 				<Option working_dir="F:/Nothing/TCP-IP/cmake-build-debug"/>
 				<Option type="4"/>
@@ -151,6 +201,9 @@
 		</Unit>
 		<Unit filename="F:/Nothing/TCP-IP/test.cpp">
 			<Option target="test"/>
+		</Unit>
+		<Unit filename="F:/Nothing/TCP-IP/tt.cpp">
+			<Option target="tt"/>
 		</Unit>
 		<Unit filename="F:/Nothing/TCP-IP/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

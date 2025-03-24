@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 project(Nothing)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     add_compile_definitions(Linux=true)
@@ -29,5 +29,7 @@ add_executable(test
         test.cpp
         socket/socket_util.cpp
 )
+
+add_executable(tt tt.cpp)
 
 #add_subdirectory(socket)

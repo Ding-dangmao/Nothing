@@ -1,3 +1,6 @@
+/*
+ * 可跨平台TCP/IP封装
+ */
 #ifndef LEI_NET_SOCKET_UTIL_H
 #define LEI_NET_SOCKET_UTIL_H
 
